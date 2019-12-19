@@ -103,7 +103,6 @@ class ImagesSearcher(FilesRestore):
 
         return found_images
 
-
     def _dirs_walker(self, search_directory_path):
         return (
             os.path.join(address, file)
