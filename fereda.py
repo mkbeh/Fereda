@@ -11,11 +11,11 @@ from PIL import ImageChops
 
 
 DEFAULT_ANDROID_DATA_DIRS_NAMES = (
-    # Galleries dirs names on various devices.
+    # Galleries parts of dirs names on various devices.
     'gallery',                                          # Samsung dir name 
     'photos',                                           # Redmi Go dir name
 
-    # Messengers.
+    # Messengers parts of dirs names.
     'telegram',
 )
 
