@@ -10,13 +10,18 @@ from PIL import Image
 from PIL import ImageChops
 
 
-DEFAULT_DIR_NAMES = (
+DEFAULT_ANDROID_DATA_DIRS_NAMES = (
     # Galleries dirs names on various devices.
-    'gallery',                                      # Samsung dir name 
-    'photos',                                       # Redmi Go dir name
+    'gallery',                                          # Samsung dir name 
+    'photos',                                           # Redmi Go dir name
 
     # Messengers.
     'telegram',
+)
+
+DEFAULT_DEVICE_MESSENGERS_DIRS_NAMES = (
+    'Telegram',
+    'VK',
 )
 
 
@@ -50,8 +55,6 @@ class ImagesSearcher(FilesRestore):
             'DCIM',
             'Pictures',
             'Download'
-
-            'Telegram',         # To remove
         )
         self._images_from_default_dirs = self._get_images_from_default_dirs()
 
@@ -117,14 +120,22 @@ class ImagesSearcher(FilesRestore):
         )
 
     def _get_default_dirs_from_device(self):
-        Default_dir = cs.namedtuple('Default_dir', ['name', 'path'])
+        Specific_dir = cs.namedtuple('Default_dir', ['name', 'path'])
 
-        return (
-            Default_dir(default_dir_name, os.path.join(self._default_android_point_dir, sub_dir))
+        found_android_data_dirs = (
+            Specific_dir(default_dir_name, os.path.join(self._default_android_point_dir, sub_dir))
             for sub_dir in os.listdir(self._default_android_point_dir)
-            for default_dir_name in DEFAULT_DIR_NAMES
+            for default_dir_name in DEFAULT_ANDROID_DATA_DIRS_NAMES
             if default_dir_name in sub_dir
         )
+
+        found_device_messengers_dirs = (
+            Specific_dir(default_messenger_dir, default_messenger_dir) 
+            for default_messenger_dir in DEFAULT_DEVICE_MESSENGERS_DIRS_NAMES
+        )
+
+        return it.chain(found_android_data_dirs, found_device_messengers_dirs)
+
 
     def search_files_handler(self):
         data_to_restore = filter(
