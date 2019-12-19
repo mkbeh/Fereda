@@ -10,21 +10,6 @@ from PIL import Image
 from PIL import ImageChops
 
 
-DEFAULT_ANDROID_DATA_DIRS_NAMES = (
-    # Galleries parts of dirs names on various devices.
-    'gallery',                                          # Samsung dir name 
-    'photos',                                           # Redmi Go dir name
-
-    # Messengers parts of dirs names.
-    'telegram',
-)
-
-DEFAULT_DEVICE_MESSENGERS_DIRS_NAMES = (
-    'Telegram',
-    'VK',
-)
-
-
 class DisplayInfo():
     pass
 
@@ -51,11 +36,26 @@ class ImagesSearcher(FilesRestore):
         self._restore_data = kwargs['restore_data']
         self._default_android_point_dir = 'Android/data'
 
-        self._default_images_dirs = (
+        self.default_android_data_dirs_names = (
+            # Galleries parts of dirs names on various devices.
+            'gallery',                                          # Samsung dir name 
+            'photos',                                           # Redmi Go dir name
+
+            # Messengers parts of dirs names.
+            'telegram',
+        )
+
+        self.default_device_messengers_dirs_names = (
+            'Telegram',
+            'VK',
+        )
+
+        self._default_device_images_dirs = (
             'DCIM',
             'Pictures',
             'Download'
         )
+
         self._images_from_default_dirs = self._get_images_from_default_dirs()
 
     def __call__(self):
@@ -65,7 +65,7 @@ class ImagesSearcher(FilesRestore):
         return it.chain(
             *(
                 (file for file in self._dirs_walker(default_images_dir) if magic.from_file(file, mime=True).startswith('image'))
-                for default_images_dir in self._default_images_dirs
+                for default_images_dir in self._default_device_images_dirs
             )
         )
 
@@ -124,13 +124,13 @@ class ImagesSearcher(FilesRestore):
         found_android_data_dirs = (
             Specific_dir(default_dir_name, os.path.join(self._default_android_point_dir, sub_dir))
             for sub_dir in os.listdir(self._default_android_point_dir)
-            for default_dir_name in DEFAULT_ANDROID_DATA_DIRS_NAMES
+            for default_dir_name in self.default_android_data_dirs_names
             if default_dir_name in sub_dir
         )
 
         found_device_messengers_dirs = (
             Specific_dir(default_messenger_dir, default_messenger_dir) 
-            for default_messenger_dir in DEFAULT_DEVICE_MESSENGERS_DIRS_NAMES
+            for default_messenger_dir in self.default_device_messengers_dirs_names
         )
 
         return it.chain(found_android_data_dirs, found_device_messengers_dirs)
