@@ -13,6 +13,10 @@ from PIL import Image
 from PIL import ImageChops
 
 
+class SelfDestruction():
+    pass
+
+
 class DisplayInfo():
     pass
 
