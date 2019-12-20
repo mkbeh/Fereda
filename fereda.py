@@ -186,6 +186,7 @@ def options_handler(**kwargs):
 def cli():
     parser = argparse.ArgumentParser(prog='Fereda', formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('-r', '--restore-data', action='store_true')
+    parser.add_argument('-s', '--self-destruction', action='store_true')
     parser.add_argument('-o', '--output-dir', default='Fereda')
 
     options_handler(**vars(parser.parse_args()))
