@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 import os
+import shutil
 import argparse
 import itertools as it
 import collections as cs
 
 import magic
+
+import utils
 
 from PIL import Image
 from PIL import ImageChops
@@ -14,7 +17,7 @@ class DisplayInfo():
     pass
 
 
-class FilesRestore():
+class ImagesRestore():
     def __init__(self, output_dir: str):
         self._output_dir = output_dir
 
@@ -23,17 +26,39 @@ class FilesRestore():
     def _create_output_dir(self):
         os.makedirs(self._output_dir, exist_ok=True)
 
+    def _get_image_restore_path(self, image_obj, associated_dir_path):
+        if not image_obj.path.endswith(image_obj.type):
+            image_obj._replace(path=image_obj.path + image_obj.type)
+
+        return os.path.join(
+            associated_dir_path,
+            image_obj.path.split('/')[-1]
+        )
+
+    def _create_associated_dir(self, associated_dir_name):
+        os.makedirs(
+            os.path.join(self._output_dir, associated_dir_name), 
+            exist_ok=True
+        )
+
+        return os.path.join(self._output_dir, associated_dir_name)
+
     def restore_data(self, data_to_restore):
         print('> Restoring data...')
 
-        for data in data_to_restore:
-            print(data)
+        for associated_dir_name, images_objs in data_to_restore.items():
+            associated_dir_path = self._create_associated_dir(associated_dir_name)
+
+            for image_obj in images_objs:
+                image_restore_path = self._get_image_restore_path(image_obj, associated_dir_path)
+                shutil.move(image_obj.path, image_restore_path)
+                
 
 
-class ImagesSearcher(FilesRestore):
+class ImagesSearcher(ImagesRestore):
     def __init__(self, **kwargs):
         super().__init__(kwargs['output_dir'])
-        self._restore_data = kwargs['restore_data']
+        self._restore_data_flag = kwargs['restore_data']
         self._default_android_point_dir = 'Android/data'
 
         self.default_android_data_dirs_names = (
@@ -98,7 +123,7 @@ class ImagesSearcher(FilesRestore):
 
             if file_type.startswith('image'):
                 found_images.append(
-                    FoundImage(file, file_type)
+                    FoundImage(file, file_type.split('/')[-1])
                 )
 
         return found_images
@@ -145,8 +170,13 @@ class ImagesSearcher(FilesRestore):
             )
         )
 
-        if self._restore_data:
-            self.restore_data(data_to_restore)
+        if self._restore_data_flag:
+            try:
+                self.restore_data(
+                    utils.merge_dicts_in_seq(data_to_restore)
+                )
+            except AttributeError:
+                print('> No data to restore. Removed or hide images not found.')
 
 
 def options_handler(**kwargs):
