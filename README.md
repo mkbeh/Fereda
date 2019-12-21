@@ -10,6 +10,5 @@ Cyber security tool for restoring removed and hide images from gallery or messen
 ## How to use
 ```
 # Enter command
-chmod u+x run.sh
-./run.sh
+bash run.sh
 ```

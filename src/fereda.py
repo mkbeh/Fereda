@@ -264,7 +264,6 @@ def options_handler(**kwargs):
 def cli():
     print(DisplayInfo.preview_img.value)
     print(DisplayInfo.author.value)
-    print(DisplayInfo.start.value)
 
     start = time.time()
 
@@ -273,8 +272,11 @@ def cli():
     parser.add_argument('-s', '--self-destruction', action='store_true')
     parser.add_argument('-o', '--output-dir', default='Fereda')
 
+    
     try:
-        options_handler(**vars(parser.parse_args()))
+        args = parser.parse_args()
+        print(DisplayInfo.start.value)
+        options_handler(**vars(args))
     except exceptions.NoDataToRestore:
         print(DisplayInfo.no_data_to_restore.value)
 
