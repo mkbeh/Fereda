@@ -10,11 +10,11 @@ import collections as cs
 
 import magic
 
-import utils
-import exceptions
-
 from PIL import Image
 from PIL import ImageChops
+
+from src import utils
+from src import exceptions
 
 
 PREVIEW_IMG = """

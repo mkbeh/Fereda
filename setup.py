@@ -7,7 +7,7 @@ setup(
     version=__version__,
     description='Cyber security tool for Android images restoring.',
     author='mkbeh',
-    platform='linux',
+    platforms='linux',
     install_requires=[
         'pillow',
         'python-magic',
