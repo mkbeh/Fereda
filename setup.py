@@ -5,7 +5,7 @@ from src import __version__
 setup(
     name='Fereda',
     version=__version__,
-    description='Cyber security tool for Android images restoring.',
+    description='Cyber security tool for Android images (removed or hide) restoring.',
     author='mkbeh',
     platforms='linux',
     install_requires=[
