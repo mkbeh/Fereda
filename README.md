@@ -8,7 +8,4 @@ Cyber security tool for restoring removed and hide images from gallery and messe
 
 
 ## How to use
-```
-# Enter command
-bash run.sh
-```
+[TO DO]
