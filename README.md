@@ -1,6 +1,6 @@
 # Fereda
 
-Cyber security tool for restoring removed and hide images from gallery or messengers on Android.
+Cyber security tool for restoring removed and hide images from gallery and messengers on Android.
 
 `Supporting`:
 
