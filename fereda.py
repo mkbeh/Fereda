@@ -120,10 +120,9 @@ class ImagesRestore():
         for associated_dir_name, images_objs in data_to_restore.items():
             associated_dir_path = self._create_associated_dir(associated_dir_name)
 
-            (
-                shutil.move(image_obj.path, self._get_image_restore_path(image_obj, associated_dir_path))
-                for image_obj in images_objs
-            )
+            for image_obj in images_objs:
+                image_restore_path = self._get_image_restore_path(image_obj, associated_dir_path)
+                shutil.move(image_obj.path, image_restore_path)
 
         print(DisplayInfo.restore_images_num.value.format(
             self._get_sum_of_restored_images(data_to_restore)
