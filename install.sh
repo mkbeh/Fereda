@@ -8,12 +8,12 @@
 
 
 function install {
-    echo lol
+    echo "Installing python or requirements..."
 }
 
 
-function isPythonVersionLowerThanRequire {
-    echo "сhecking if python version is right"
+function isPythonVersionRight {
+    echo "сhecking if python version is right..."
 }
 
 
