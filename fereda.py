@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+
 import os
+import time
+import enum
 import shutil
 import argparse
 import itertools as it
@@ -8,16 +11,76 @@ import collections as cs
 import magic
 
 import utils
+import exceptions
 
 from PIL import Image
 from PIL import ImageChops
 
 
+PREVIEW_IMG = """
+                               _
+         .::::::::::.        -(_)====u         .::::::::::.
+       .::::''''''::::.                      .::::''''''::::.
+     .:::'          `::::....          ....::::'          `:::.
+    .::'             `:::::::|        |:::::::'             `::.
+   .::|               |::::::|_ ___ __|::::::|               |::.
+   `--'               |::::::|_()__()_|::::::|               `--'
+    :::               |::-o::|        |::o-::|               :::
+    `::.             .|::::::|        |::::::|.             .::'
+     `:::.          .::\-----'        `-----/::.          .:::'
+       `::::......::::'                      `::::......::::'
+         `::::::::::'                          `::::::::::'
+"""
+
+
+class DisplayInfo(enum.Enum):
+    colors = {
+        'yellow'    :   '\u001b[33m',
+        'green'     :   '\u001b[32m',
+        'black'     :   '\u001b[30m',
+        'red'       :   '\u001b[31m',
+        'blue'      :   '\u001b[34m',
+        'magenta'   :   '\u001b[35m',
+        'cyan'      :   '\u001b[36m',
+        'white'     :   '\u001b[37m',
+        'reset'     :   '\u001b[0m',
+    }
+
+    templates = {
+        'arrow'                 :   f'{colors.get("yellow")}>>{colors.get("green")}',
+        'lattice'               :   f'{colors.get("red")}##{colors.get("green")}',
+        'star_with_arrow'       :   f'{colors.get("red")}*>{colors.get("cyan")}',
+        'exception'             :   f'{colors.get("cyan")}!!{colors.get("red")}',
+    }
+
+
+    # Info messages.
+    preview_img             =   f'{PREVIEW_IMG}'
+    author                  =   '\t\t\t||| CREATED BY MKBEH |>\n'
+    start                   =   f'{templates.get("arrow")} Utility started...'
+    images_searcher         =   f'{templates.get("arrow")} Running searcher of removed and hidden images...'
+    begin_restoring         =   f'{templates.get("arrow")} Running restore of found images...'
+    restore_images_num      =   templates.get("arrow") + ' Summary restored' + colors.get('cyan') + ' {} ' + colors.get('green')  + 'images'
+    self_destruction        =   templates.get("star_with_arrow") + ' Removing utility from device...'
+    elapsed_time            =   templates.get("lattice") + ' Elapsed time: ' + colors.get('cyan') + '{}'
+
+    # Exceptions messages.
+    no_data_to_restore      =   f'{templates.get("exception")} No data to restore. Removed or hide images not found.'
+
+    @staticmethod
+    def show_found_data_info(data):
+        header = "{:>7} {:>25}".format('Name','Summary')
+        print('\u001b[0m \n', ' ' * 2 + '-' * (len(header) - 3))
+        print(header)
+        print(' ' * 3 + '-' * (len(header) - 3))
+
+        for name, data in data.items():
+            print("{:>11} {:>18}".format(name, len(data)))
+
+        print(' ' * 3 + '-' * (len(header) - 3), '\n')
+
+
 class SelfDestruction():
-    pass
-
-
-class DisplayInfo():
     pass
 
 
@@ -29,6 +92,12 @@ class ImagesRestore():
 
     def _create_output_dir(self):
         os.makedirs(self._output_dir, exist_ok=True)
+
+    @staticmethod
+    def _get_sum_of_restored_images(data_to_restore):
+        return sum(
+            (len(value) for value in data_to_restore.values())
+        )
 
     def _get_image_restore_path(self, image_obj, associated_dir_path):
         if not image_obj.path.endswith(image_obj.type):
@@ -48,15 +117,17 @@ class ImagesRestore():
         return os.path.join(self._output_dir, associated_dir_name)
 
     def restore_data(self, data_to_restore):
-        print('> Restoring data...')
-
         for associated_dir_name, images_objs in data_to_restore.items():
             associated_dir_path = self._create_associated_dir(associated_dir_name)
 
             (
                 shutil.move(image_obj.path, self._get_image_restore_path(image_obj, associated_dir_path))
                 for image_obj in images_objs
-            )   
+            )
+
+        print(DisplayInfo.restore_images_num.value.format(
+            self._get_sum_of_restored_images(data_to_restore)
+        ))
 
 
 class ImagesSearcher(ImagesRestore):
@@ -88,6 +159,7 @@ class ImagesSearcher(ImagesRestore):
         self._images_from_default_dirs = self._get_images_from_default_dirs()
 
     def __call__(self):
+        print(DisplayInfo.images_searcher.value)
         self.search_files_handler()
 
     def _get_images_from_default_dirs(self):
@@ -174,13 +246,16 @@ class ImagesSearcher(ImagesRestore):
             )
         )
 
+        data_to_restore = utils.merge_dicts_in_seq(data_to_restore)
+
+        if not data_to_restore:
+            raise exceptions.NoDataToRestore()
+
+        DisplayInfo.show_found_data_info(data_to_restore)
+
         if self._restore_data_flag:
-            try:
-                self.restore_data(
-                    utils.merge_dicts_in_seq(data_to_restore)
-                )
-            except AttributeError:
-                print('> No data to restore. Removed or hide images not found.')
+            print(DisplayInfo.begin_restoring.value)
+            self.restore_data(data_to_restore)
 
 
 def options_handler(**kwargs):
@@ -188,13 +263,25 @@ def options_handler(**kwargs):
 
 
 def cli():
+    print(DisplayInfo.preview_img.value)
+    print(DisplayInfo.author.value)
+    print(DisplayInfo.start.value)
+
+    start = time.time()
+
     parser = argparse.ArgumentParser(prog='Fereda', formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('-r', '--restore-data', action='store_true')
     parser.add_argument('-s', '--self-destruction', action='store_true')
     parser.add_argument('-o', '--output-dir', default='Fereda')
 
-    options_handler(**vars(parser.parse_args()))
+    try:
+        options_handler(**vars(parser.parse_args()))
+    except exceptions.NoDataToRestore:
+        print(DisplayInfo.no_data_to_restore.value)
 
+    print(DisplayInfo.elapsed_time.value.format(
+        float('{:.3f}'.format(time.time() - start))
+        ) + 's\n')
 
 if __name__ == "__main__":
     cli()
