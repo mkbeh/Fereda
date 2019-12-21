@@ -13,13 +13,12 @@ function install {
 
 
 function isPythonVersionRight {
+    ##! if lower than 3.7 - install latest version
     echo "сhecking if python version is right..."
 }
 
 
 function isPythonInstalled {
-    ##! if lower than 3.7 - install latest version
-
     python_version=$(python --version 2>&1)
 
     if [[ "$python_version" =~ ^Python ]]; then
