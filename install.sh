@@ -7,53 +7,61 @@
 # chmod u+x run.sh
 
 
-# ПРИ DEBUG МОДЕ ПРОБОВАТЬ ВЫЗЫВАТЬ 2 КОМАНДЫ PYTHON И PYTHON3 (с цифрой 3)
-
-
 OPERATION_SYSTEM=""
 
 
-function install {
+function installPythonAndFereda {
     echo "Installing python or requirements..."
 }
 
 
 function isPythonVersionSupport {
-    echo "Checking is installed Python version supported..."
+    echo "::> Checking is installed Python version supported..."
 
     supportVersions=(3.7 3.8)
     installedVersionNum=$(echo "$1" | cut -d' ' -f2) 
 
     for rVer in "${supportVersions[@]}"; do
         if [[ "$installedVersionNum" =~ ^$rVer ]]; then
-            printf ">> Installed Python version supported. Installed: Python %s\n" "$installedVersionNum"
+            printf "[+] Installed Python version supported. Installed: Python %s\n" "$installedVersionNum"
+            echo "::> Installing Fereda utility..."
+            ##! ЗДЕСЬ НУЖНО УСТАНОВИТЬ УТИЛИТУ!!!!!!
             return         
         fi
     done
 
-    printf "Installed Python %s not supported. Installing latest Python...\n" "$installedVersionNum"
+    printf "::> Installed Python %s not supported. Installing latest Python...\n" "$installedVersionNum"
 }
 
 
 function isPythonInstalled {
-    python_version=$(python --version 2>&1)
+    pythonVersions=("$(python --version 2>&1)" "$(python3 --version 2>&1)")
+    installedPythonVersion=""
 
-    if [[ "$python_version" =~ ^Python ]]; then
-        echo ">> Found installed $python_version"
-        isPythonVersionSupport "$python_version"
-    else
-        echo "Python is not installed, installing Python..."
+    for pythonVersion in "${pythonVersions[@]}"; do
+        if [[ "$pythonVersion" =~ ^Python\ 3 ]]; then
+            installedPythonVersion="$pythonVersion"
+            break
+        fi
+    done
+
+    if test -z "$installedPythonVersion"; then
+        echo "::> Python is not installed, installing Python..."
+    else 
+        echo "[+] Found installed $pythonVersion"
+        isPythonVersionSupport "$pythonVersion"
     fi
 }
 
 
 function debug {
-    echo "Running debug mode..."
+    echo "::> Running debug mode..."
     isPythonInstalled
 }
 
 
 function battle {
+    echo "::> Running battle mode..."
     echo 'Installing termux packages...'
     isPythonInstalled
 }
