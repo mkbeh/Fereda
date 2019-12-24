@@ -19,7 +19,7 @@ function installRequirements {
         libncursesw5-dev xz-utils tk-dev
 
         wget https://www.python.org/ftp/python/3.6.5/Python-3.7.6.tgz && tar xvf Python-3.6.5.tgz && 'cd Python-3.7.6 || exit'
-        ./configure --enable-optimizations --with-ensurepip=install && make -j 8
+        ./configure --enable-optimizations --with-ensurepip=install && make -j 8 && sudo make altinstall
     fi
 
     installUtil
