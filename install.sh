@@ -1,13 +1,11 @@
 #!/bin/bash
 
 
-##! if this - it means remove comment
-
 # echo "export PYTHONPATH=/path/to/tool" >> ~/.bashrc && . ~/.bashrc
 # chmod u+x run.sh
 
 
-OPERATION_SYSTEM=""
+ OPERATION_SYSTEM=$(uname -o)
 
 
 function installRequirements {
@@ -94,15 +92,8 @@ function battle {
 }
 
 
-function modesHandler {
-    OPERATION_SYSTEM=$(uname -o)
-
-    if [[ "$OPERATION_SYSTEM" == "Android" ]]; then
-        battle
-    else
-        debug
-    fi
-}
-
-
-modesHandler
+if [[ "$OPERATION_SYSTEM" == "Android" ]]; then
+    battle
+else
+    debug
+fi
