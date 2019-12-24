@@ -1,28 +1,48 @@
 #!/bin/bash
+set -e
+shopt -s extglob
 
 
-# echo "export PYTHONPATH=/path/to/tool" >> ~/.bashrc && . ~/.bashrc
-# chmod u+x run.sh
+chmod u+x install.sh
+declare -r BASHRC_LOC="$HOME/.bashrc"
 
 
  OPERATION_SYSTEM=$(uname -o)
+ SUPPORTED_PYTHON_VERSIONS=(3.7 3.8)
+
+
+function addPYTHONPATH {
+    requireStr="export PYTHONPATH=\"$(pwd | sed 's/\ /\\\ /g')\""
+    compareResult=false
+
+    echo "::> Cheching is PYTHONPATH in .bashrc..."
+
+    while IFS= read -r line
+    do
+        if [[ $line == "$requireStr" ]]; then
+            echo "[+] PYTHONPATH already added to .bashrc"
+
+            compareResult=true
+            break
+        fi
+    done <<< "$(tail -n5 "$BASHRC_LOC")"
+
+    if ! $compareResult ; then
+        echo "::> PYTHONPATH not added to .bashrc. Adding PYTHONPATH..."
+        echo "$requireStr" >> "$BASHRC_LOC" && . "$BASHRC_LOC"
+        echo "[+] PYTHON path successfully added"
+    fi
+}
 
 
 function installRequirements {
-    echo "::> Installing requirements for $OPERATION_SYSTEM..."
-
     if [[ "$OPERATION_SYSTEM" == "Android" ]]; then
-        echo installing termux packages.........
+        echo "::> Installing requirements for $OPERATION_SYSTEM..."
+        installUtil
     else
-        sudo apt-get install -y make build-essential libssl-dev zlib1g-dev \
-        libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev \
-        libncursesw5-dev xz-utils tk-dev
-
-        wget https://www.python.org/ftp/python/3.6.5/Python-3.7.6.tgz && tar xvf Python-3.6.5.tgz && 'cd Python-3.7.6 || exit'
-        ./configure --enable-optimizations --with-ensurepip=install && make -j 8 && sudo make altinstall
+        echo "::> To installing Fereda util in debug mode previously you need to install Python (supported versions: ${SUPPORTED_PYTHON_VERSIONS[*]})." \
+             "Use this guidehttps://realpython.com/installing-python/#ubuntu to istall Python."
     fi
-
-    installUtil
 }
 
 
@@ -43,11 +63,9 @@ function installUtil {
 
 function isPythonVersionSupport {
     echo "::> Checking is installed Python version supported..."
-
-    supportVersions=(3.7 3.8)
     installedVersionNum=$(echo "$1" | cut -d' ' -f2) 
 
-    for rVer in "${supportVersions[@]}"; do
+    for rVer in "${SUPPORTED_PYTHON_VERSIONS[@]}"; do
         if [[ "$installedVersionNum" =~ ^$rVer ]]; then
             printf "[+] Installed Python version supported. Installed: Python %s\n" "$installedVersionNum"
             echo "::> Installing Fereda utility..."
@@ -73,6 +91,7 @@ function isPythonInstalled {
 
     if test -z "$installedPythonVersion"; then
         echo "::> Python is not installed, installing Python..."
+        installRequirements
     else 
         echo "[+] Found installed $pythonVersion"
         isPythonVersionSupport "$pythonVersion"
@@ -82,6 +101,7 @@ function isPythonInstalled {
 
 function debug {
     echo "::> Running debug mode..."
+    addPYTHONPATH
     isPythonInstalled
 }
 
