@@ -11,7 +11,20 @@ OPERATION_SYSTEM=""
 
 
 function installRequirements {
-    echo "Installing python or requirements..."
+    echo "::> Installing requirements for $OPERATION_SYSTEM..."
+
+    if [[ "$OPERATION_SYSTEM" == "Android" ]]; then
+        echo installing termux packages.........
+    else
+        sudo apt-get install -y make build-essential libssl-dev zlib1g-dev \
+        libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev \
+        libncursesw5-dev xz-utils tk-dev
+
+        wget https://www.python.org/ftp/python/3.6.5/Python-3.7.6.tgz && tar xvf Python-3.6.5.tgz && 'cd Python-3.7.6 || exit'
+        ./configure --enable-optimizations --with-ensurepip=install && make -j 8
+    fi
+
+    installUtil
 }
 
 
@@ -77,7 +90,6 @@ function debug {
 
 function battle {
     echo "::> Running battle mode..."
-    echo 'Installing termux packages...'
     isPythonInstalled
 }
 
