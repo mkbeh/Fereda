@@ -15,6 +15,21 @@ function installRequirements {
 }
 
 
+function getLatestPackageInDir {
+    local package=$(ls dist/ | sort -V | tail -n 1)
+    echo "${package}"
+}
+
+
+function installUtil {
+    python3.7 setup.py bdist_egg --exclude-source-files
+    package=$(getLatestPackageInDir)
+    python3.7 -m easy_install --user dist/"${package}"
+
+    echo "[+] Util was successfully installed. To use it run command: 'fereda -h'"
+}
+
+
 function isPythonVersionSupport {
     echo "::> Checking is installed Python version supported..."
 
@@ -25,9 +40,7 @@ function isPythonVersionSupport {
         if [[ "$installedVersionNum" =~ ^$rVer ]]; then
             printf "[+] Installed Python version supported. Installed: Python %s\n" "$installedVersionNum"
             echo "::> Installing Fereda utility..."
-
-            ##! ЗДЕСЬ НУЖНО УСТАНОВИТЬ УТИЛИТУ!!!!!!
-            python3.7 setup.py bdist_egg --exclude-source-files
+            installUtil
             return         
         fi
     done
