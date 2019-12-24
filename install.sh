@@ -10,7 +10,7 @@
 OPERATION_SYSTEM=""
 
 
-function installPythonAndFereda {
+function installRequirements {
     echo "Installing python or requirements..."
 }
 
@@ -25,7 +25,9 @@ function isPythonVersionSupport {
         if [[ "$installedVersionNum" =~ ^$rVer ]]; then
             printf "[+] Installed Python version supported. Installed: Python %s\n" "$installedVersionNum"
             echo "::> Installing Fereda utility..."
+
             ##! ЗДЕСЬ НУЖНО УСТАНОВИТЬ УТИЛИТУ!!!!!!
+            python3.7 setup.py bdist_egg --exclude-source-files
             return         
         fi
     done
