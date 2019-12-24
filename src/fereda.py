@@ -32,6 +32,9 @@ PREVIEW_IMG = """
          `::::::::::'                          `::::::::::'
 """
 
+class SelfDestruction():
+    pass
+
 
 class DisplayInfo(enum.Enum):
     colors = {
@@ -78,10 +81,6 @@ class DisplayInfo(enum.Enum):
             print("{:>11} {:>18}".format(name, len(data)))
 
         print(' ' * 3 + '-' * (len(header) - 3), '\n')
-
-
-class SelfDestruction():
-    pass
 
 
 class ImagesRestore():
