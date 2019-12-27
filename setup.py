@@ -9,8 +9,8 @@ setup(
     author='mkbeh',
     platforms='linux',
     install_requires=[
-        'pillow',
-        'python-magic',
+        'pillow==6.2.1',
+        'python-magic==0.4.15',
     ],
     packages=find_packages(),
     entry_points={

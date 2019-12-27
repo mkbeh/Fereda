@@ -65,7 +65,7 @@ class DisplayInfo(enum.Enum):
     begin_restoring         =   f'{templates.get("arrow")} Running restore of found images...'
     restore_images_num      =   templates.get("arrow") + ' Summary restored' + colors.get('cyan') + ' {} ' + colors.get('green')  + 'images'
     self_destruction        =   templates.get("star_with_arrow") + ' Removing utility from device...'
-    elapsed_time            =   templates.get("lattice") + ' Elapsed time: ' + colors.get('cyan') + '{}'
+    elapsed_time            =   templates.get("lattice") + ' Elapsed time: ' + colors.get('cyan') + '{}' + colors.get('reset')
 
     # Exceptions messages.
     no_data_to_restore      =   f'{templates.get("exception")} No data to restore. Removed or hide images not found.'
@@ -84,8 +84,10 @@ class DisplayInfo(enum.Enum):
 
 
 class ImagesRestore():
-    def __init__(self, output_dir: str):
+
+    def __init__(self, output_dir: str, move_files_flag: str):
         self._output_dir = output_dir
+        self._move_files_flag = move_files_flag
 
         self._create_output_dir()
 
@@ -98,9 +100,16 @@ class ImagesRestore():
             (len(value) for value in data_to_restore.values())
         )
 
-    def _get_image_restore_path(self, image_obj, associated_dir_path):
+    def _move_or_copy_restored_images(self, image_path, image_restore_path):
+        if self._move_files_flag:
+            shutil.move(image_path, image_restore_path)
+        else:
+            shutil.copy2(image_path, image_restore_path)
+
+    @staticmethod
+    def _get_image_restore_path(image_obj, associated_dir_path):
         if not image_obj.path.endswith(image_obj.type):
-            image_obj._replace(path=image_obj.path + image_obj.type)
+            image_obj = image_obj._replace(path=image_obj.path + '.' + image_obj.type)
 
         return os.path.join(
             associated_dir_path,
@@ -121,7 +130,7 @@ class ImagesRestore():
 
             for image_obj in images_objs:
                 image_restore_path = self._get_image_restore_path(image_obj, associated_dir_path)
-                shutil.move(image_obj.path, image_restore_path)
+                self._move_or_copy_restored_images(image_obj.path, image_restore_path)
 
         print(DisplayInfo.restore_images_num.value.format(
             self._get_sum_of_restored_images(data_to_restore)
@@ -129,15 +138,19 @@ class ImagesRestore():
 
 
 class ImagesSearcher(ImagesRestore):
+    # TODO: add progress bar.
+    # FIXME: also remove duplicates of images.
+
     def __init__(self, **kwargs):
-        super().__init__(kwargs['output_dir'])
+        super().__init__(kwargs['output_dir'], kwargs['move_files'])
         self._restore_data_flag = kwargs['restore_data']
         self._default_android_point_dir = 'Android/data'
 
         self.default_android_data_dirs_names = (
             # Galleries parts of dirs names on various devices.
             'gallery',                                          # Samsung dir name 
-            'photos',                                           # Redmi Go dir name
+            'photos',                                           # Redmi Go dir 
+            'camera',
 
             # Messengers parts of dirs names.
             'telegram',
@@ -202,7 +215,8 @@ class ImagesSearcher(ImagesRestore):
 
         return found_images
 
-    def _dirs_walker(self, search_directory_path):
+    @staticmethod
+    def _dirs_walker(search_directory_path):
         return (
             os.path.join(address, file)
             for address, _, files in os.walk(search_directory_path)
@@ -269,7 +283,10 @@ def cli():
     parser = argparse.ArgumentParser(prog='Fereda', formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('-r', '--restore-data', action='store_true')
     parser.add_argument('-s', '--self-destruction', action='store_true')
-    parser.add_argument('-o', '--output-dir', default='Fereda')
+    parser.add_argument('-m', '--move-files', action='store_true')
+    parser.add_argument('-o', '--output-dir', default='Fereda_Data', metavar='')
+
+    print(parser.parse_args())
 
     
     try:

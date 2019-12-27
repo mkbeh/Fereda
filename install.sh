@@ -9,6 +9,7 @@ declare -r BASHRC_LOC="$HOME/.bashrc"
 
  OPERATION_SYSTEM=$(uname -o)
  SUPPORTED_PYTHON_VERSIONS=(3.7 3.8)
+ INSTALLED_PYTHON_VERSION=""
 
 
 function addPYTHONPATH {
@@ -35,7 +36,18 @@ function addPYTHONPATH {
 }
 
 
-function installRequirements {
+function getLatestPackageInDir {
+    local package=$(ls dist/ | sort -V | tail -n 1)
+    echo "${package}"
+}
+
+
+function installUtil {
+    $INSTALLED_PYTHON_VERSION setup.py bdist_egg --exclude-source-files
+    package=$(getLatestPackageInDir)
+    $INSTALLED_PYTHON_VERSION -m easy_install --user dist/"${package}"
+
+    function installRequirements {
     if [[ "$OPERATION_SYSTEM" == "Android" ]]; then
         echo "::> Installing requirements for $OPERATION_SYSTEM..."
         installUtil
@@ -44,18 +56,6 @@ function installRequirements {
              "Use this guidehttps://realpython.com/installing-python/#ubuntu to istall Python."
     fi
 }
-
-
-function getLatestPackageInDir {
-    local package=$(ls dist/ | sort -V | tail -n 1)
-    echo "${package}"
-}
-
-
-function installUtil {
-    python3.7 setup.py bdist_egg --exclude-source-files
-    package=$(getLatestPackageInDir)
-    python3.7 -m easy_install --user dist/"${package}"
 
     echo "[+] Util was successfully installed. To use it run command: 'fereda -h'"
 }
@@ -78,18 +78,28 @@ function isPythonVersionSupport {
 }
 
 
+function installRequirements {
+    if [[ "$OPERATION_SYSTEM" == "Android" ]]; then
+        echo "::> Installing requirements for $OPERATION_SYSTEM..."
+        installUtil
+    else
+        echo "::> To installing Fereda util in debug mode previously you need to install Python (supported versions: ${SUPPORTED_PYTHON_VERSIONS[*]})." \
+             "Use this guidehttps://realpython.com/installing-python/#ubuntu to istall Python."
+    fi
+}
+
+
 function isPythonInstalled {
     pythonVersions=("$(python --version 2>&1)" "$(python3 --version 2>&1)")
-    installedPythonVersion=""
 
     for pythonVersion in "${pythonVersions[@]}"; do
         if [[ "$pythonVersion" =~ ^Python\ 3 ]]; then
-            installedPythonVersion="$pythonVersion"
+            INSTALLED_PYTHON_VERSION=$(echo "$pythonVersion" | tr "[:upper:]" "[:lower:]" | sed -e 's/ //; s/..$//')
             break
         fi
     done
 
-    if test -z "$installedPythonVersion"; then
+    if test -z "$INSTALLED_PYTHON_VERSION"; then
         echo "::> Python is not installed, installing Python..."
         installRequirements
     else 
@@ -109,11 +119,29 @@ function debug {
 function battle {
     echo "::> Running battle mode..."
     isPythonInstalled
+
+    # pkg update && pkg upgrade -y
+
+    # в текущем месте сразу же появится директория storage
+    # нужно сделать > cd storage/shared и из этой директории можно будет запускать установленный скрипт
+    # termux-setup-storage
+
+    # pkg install python
+    # pkg install libjpeg-turbo clang     - fixed Pillow
+    # pkg install sox                     - fixed python-magic
 }
 
 
 if [[ "$OPERATION_SYSTEM" == "Android" ]]; then
     battle
-else
+elif [[ "$OPERATION_SYSTEM" == "GNU/Linux" ]]; then
     debug
+else
+    echo "3RROR!!!!!! You are not using Linux or Android OS." \
+         "It means you are using another OS." \
+         "Use supported OS or remove this utility."
 fi
+
+
+# TODO: сделать установку пакетов на андрюше и переходы в нужные директории
+# TODO: добавить цветной вывод и слипы
