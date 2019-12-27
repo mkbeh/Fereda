@@ -10,11 +10,12 @@ import collections as cs
 
 import magic
 
-from PIL import Image
-from PIL import ImageChops
+from PIL import Image, ImageChops
 
 from src import utils
 from src import exceptions
+
+from pprint import pprint
 
 
 PREVIEW_IMG = """
@@ -33,6 +34,7 @@ PREVIEW_IMG = """
 """
 
 class SelfDestruction():
+    # TODO: Написать удаление программы.
     pass
 
 
@@ -62,6 +64,7 @@ class DisplayInfo(enum.Enum):
     author                  =   '\t\t\t||| CREATED BY MKBEH |>\n'
     start                   =   f'{templates.get("arrow")} Utility started...'
     images_searcher         =   f'{templates.get("arrow")} Running searcher of removed and hidden images...'
+    remove_duplicates       =   f'{templates.get("arrow")} Removing duplicates of found images...'
     begin_restoring         =   f'{templates.get("arrow")} Running restore of found images...'
     restore_images_num      =   templates.get("arrow") + ' Summary restored' + colors.get('cyan') + ' {} ' + colors.get('green')  + 'images'
     self_destruction        =   templates.get("star_with_arrow") + ' Removing utility from device...'
@@ -138,8 +141,14 @@ class ImagesRestore():
 
 
 class ImagesSearcher(ImagesRestore):
-    # TODO: add progress bar.
-    # FIXME: also remove duplicates of images.
+    """
+    TODO: add progress bar.
+
+    FIXME: also remove duplicates of images.
+    Перед тем как проверять фото на различия - сначала требуется удалить дубликаты.
+
+    NOTE: подумать , стоит ли определять типы файлов в данном классе , т.к. сравнение на различие не будет требовать Pillow
+    """
 
     def __init__(self, **kwargs):
         super().__init__(kwargs['output_dir'], kwargs['move_files'])
@@ -172,6 +181,9 @@ class ImagesSearcher(ImagesRestore):
     def __call__(self):
         print(DisplayInfo.images_searcher.value)
         self.search_files_handler()
+
+    def _remove_duplicates(self, folder_data):
+        pprint(folder_data)
 
     def _get_images_from_default_dirs(self):
         return it.chain(
@@ -258,16 +270,20 @@ class ImagesSearcher(ImagesRestore):
             )
         )
 
-        data_to_restore = utils.merge_dicts_in_seq(data_to_restore)
 
-        if not data_to_restore:
-            raise exceptions.NoDataToRestore()
+        for i in data_to_restore:
+            self._remove_duplicates(i)
 
-        DisplayInfo.show_found_data_info(data_to_restore)
+        # data_to_restore = utils.merge_dicts_in_seq(data_to_restore)       # REPLACE TO CHAINMAP!!!!!!!! AND REMOVE UTIL!!!!! ?????
 
-        if self._restore_data_flag:
-            print(DisplayInfo.begin_restoring.value)
-            self.restore_data(data_to_restore)
+        # if not data_to_restore:
+        #     raise exceptions.NoDataToRestore()
+
+        # DisplayInfo.show_found_data_info(data_to_restore)
+
+        # if self._restore_data_flag:
+        #     print(DisplayInfo.begin_restoring.value)
+        #     self.restore_data(data_to_restore)
 
 
 def options_handler(**kwargs):
