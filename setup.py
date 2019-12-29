@@ -1,5 +1,5 @@
 from setuptools import setup, find_packages
-from src import __version__
+from fereda import __version__
 
 
 setup(
@@ -15,7 +15,7 @@ setup(
     packages=find_packages(),
     entry_points={
         'console_scripts': [
-            'fereda = src.fereda:cli'
+            'fereda = fereda.__main__:cli'
         ]
     }
 )

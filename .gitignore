@@ -131,4 +131,4 @@ dmypy.json
 # My
 .vscode/
 test.py
-src/test_images
+fereda/test_images
