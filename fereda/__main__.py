@@ -10,6 +10,7 @@ import collections as cs
 
 import magic
 
+from dataclasses import dataclass
 from hashlib import md5
 
 from PIL import Image, ImageChops
@@ -142,6 +143,19 @@ class ImagesRestore():
         ))
 
 
+@dataclass(repr=False)
+class Image:
+    __slots__ = ['path', 'type', 'hash']
+    
+    path: str
+    type: str
+    hash: str
+
+    def __eq__(self, other):
+        if isinstance(other, Image):
+            return self.hash == other.hash
+
+
 class ImagesSearcher(ImagesRestore):
     """
     TODO: add progress bar.
@@ -221,7 +235,7 @@ class ImagesSearcher(ImagesRestore):
         with open(filepath, 'rb') as f:
             return md5(f.read()).hexdigest()
 
-    def _remove_duplicates(self, folder_data):
+    def _remove_duplicates_handler(self, folder_data):
         """
         TODO: 
         1. отсортировать по расширениям
@@ -244,6 +258,9 @@ class ImagesSearcher(ImagesRestore):
 
         pprint(list(images_jpeg_with_hashes))
         pprint(list(images_png_with_hashes))
+
+        #####
+        
 
 
         print('////')
@@ -273,7 +290,7 @@ class ImagesSearcher(ImagesRestore):
     def _search_files(self, search_directory: cs.namedtuple):
         images = self._recognize_files_type(self._dirs_walker(search_directory.path))
 
-        new_images = self._remove_duplicates(images)
+        new_images = self._remove_duplicates_handler(images)
 
         # pprint(new_images)
 
