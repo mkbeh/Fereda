@@ -165,8 +165,6 @@ class ImagesSearcher(ImagesRestore, Image):
     """
     TODO: add progress bar.
     TODO: encode dirs names
-
-    TODO: recognize is image removed
     """
 
     def __init__(self, **kwargs):
