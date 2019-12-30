@@ -289,31 +289,16 @@ class ImagesSearcher(ImagesRestore, Image):
 
 
     def search_files_handler(self):
-        lst = []
-
-        for found_default_dir_from_device in self._get_default_dirs_from_device():
-            print('.......')
-            print(found_default_dir_from_device)
-            lst.append(
+        data_to_restore = filter(
+            lambda x: len(*x.values()) > 0,
+            (
                 {found_default_dir_from_device.name: self._search_files(found_default_dir_from_device)}
+                for found_default_dir_from_device in self._get_default_dirs_from_device()
             )
+        )
 
-        pprint(lst)
+        pprint(list(data_to_restore))
 
-        # for i in lst:
-        #     pprint(i)
-
-        # data_to_restore = filter(              
-        #     lambda x: len(*x.values()) > 0, 
-        #     (
-        #         {found_default_dir_from_device.name: self._search_files(found_default_dir_from_device)}
-        #         for found_default_dir_from_device in self._get_default_dirs_from_device()
-        #     )
-        # )
-
-
-        # for i in data_to_restore:
-        #     self._remove_duplicates(i)
 
         # data_to_restore = utils.merge_dicts_in_seq(data_to_restore)       # REPLACE TO CHAINMAP!!!!!!!! AND REMOVE UTIL!!!!! ?????
 

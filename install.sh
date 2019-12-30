@@ -3,7 +3,6 @@ set -e
 shopt -s extglob
 
 
-chmod u+x install.sh
 declare -r BASHRC_LOC="$HOME/.bashrc"
 
 
