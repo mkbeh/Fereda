@@ -13,8 +13,6 @@ import magic
 from dataclasses import dataclass
 from hashlib import md5
 
-from PIL import Image, ImageChops
-
 from fereda import utils
 from fereda import exceptions
 
@@ -64,7 +62,7 @@ class DisplayInfo(enum.Enum):
 
     # Info messages.
     preview_img             =   f'{PREVIEW_IMG}'
-    author                  =   '\t\t\t||| CREATED BY MKBEH TEAM |>\n'
+    author                  =   '\t\t\t||| CREATED BY R3N3V4L TEAM |>\n'
     start                   =   f'{templates.get("arrow")} Utility started...'
     images_searcher         =   f'{templates.get("arrow")} Running searcher of removed and hidden images...'
     remove_duplicates       =   f'{templates.get("arrow")} Removing duplicates of found images...'
@@ -160,10 +158,10 @@ class Image:
 
     def __eq__(self, other):
         if isinstance(other, Image):
-            return self.hash == other.hash
+            return self.type == other.type and self.hash == other.hash
 
 
-class ImagesSearcher(ImagesRestore):
+class ImagesSearcher(ImagesRestore, Image):
     """
     TODO: add progress bar.
     TODO: encode dirs names
@@ -204,37 +202,35 @@ class ImagesSearcher(ImagesRestore):
         self.search_files_handler()
 
     def _get_images_from_default_dirs(self):
-        return it.chain(
-            *(
-                (file for file in self._dirs_walker(default_images_dir) if magic.from_file(file, mime=True).startswith('image'))
-                for default_images_dir in self._default_device_images_dirs
-            )
+        images = []
+
+        for default_images_dir in self._default_device_images_dirs:
+            for file in self._dirs_walker(default_images_dir):
+                file_type = magic.from_file(file, mime=True)
+
+                if file_type.startswith('image'):
+                    images.append(
+                        Image(path=file, type=file_type.split('/')[-1], hash='')
+                    )
+
+        return (
+            image for image in images
         )
 
-    # def _is_images_different(self, image):
-    #     self._images_from_default_dirs, images_from_default_dirs_cp = it.tee(self._images_from_default_dirs, 2)
-    #     image_from_filesystem = Image.open(image)
+    def _is_image_in_images_from_default_dirs(self, image):
+        self._images_from_default_dirs, images_from_default_dirs_cp = it.tee(self._images_from_default_dirs, 2)
+        results = (image == image_from_default_dir for image_from_default_dir in images_from_default_dirs_cp)
 
-    #     for image_from_default_dir in images_from_default_dirs_cp:
-    #         try:
-    #             diff = ImageChops.difference(image_from_filesystem, Image.open(image_from_default_dir))
-    #         except ValueError:
-    #             continue
+        return True if True in results else False
 
-    #         if not diff.getbbox():      # Images are the same.
-    #             return False
-    #     else:                           # Images are different.
-    #         return True
+        
 
-    def _is_images_different(self, image):
-        pass
+    def _delete_non_removed_images(self, images):
+        return tuple(
+            image for image in images if not self._is_image_in_images_from_default_dirs(image)
+        )
 
-    def _is_images_removed(self, images):
-        return [
-            image for image in images if self._is_images_different(image.path)
-        ]
-
-    def _remove_duplicates_handler(self, folder_data):
+    def _remove_duplicates(self, folder_data):
         images_jpeg, images_png = (
             {image_obj.hash: image_obj for image_obj in folder_data if image_obj.type == ext} for ext in ('jpeg', 'png')
         )
@@ -265,37 +261,29 @@ class ImagesSearcher(ImagesRestore):
         )
 
     def _search_files(self, search_directory: cs.namedtuple):
-        images = self._recognize_files_type(self._dirs_walker(search_directory.path))
-
-        new_images = self._remove_duplicates_handler(images)
-
-        # try:
-        #     pprint(list(new_images))
-        # except TypeError:
-        #     print('Lol')
-
-
-        return new_images
-
-        # return \
-        # self._is_images_removed(
-        #     self._recognize_files_type(
-        #         self._dirs_walker(search_directory.path)
-        #     )
-        # )
+        return \
+            self._delete_non_removed_images(
+                self._remove_duplicates(
+                    self._recognize_files_type(
+                        self._dirs_walker(
+                            search_directory.path
+                        )
+                    )
+                )
+            )
 
     def _get_default_dirs_from_device(self):
-        Specific_dir = cs.namedtuple('Default_dir', ['name', 'path'])
+        Default_dir = cs.namedtuple('Default_dir', ['name', 'path'])
 
         found_android_data_dirs = (
-            Specific_dir(default_dir_name, os.path.join(self._default_android_point_dir, sub_dir))
+            Default_dir(default_dir_name, os.path.join(self._default_android_point_dir, sub_dir))
             for sub_dir in os.listdir(self._default_android_point_dir)
             for default_dir_name in self.default_android_data_dirs_names
             if default_dir_name in sub_dir
         )
 
         found_device_messengers_dirs = (
-            Specific_dir(default_messenger_dir, default_messenger_dir) 
+            Default_dir(default_messenger_dir, default_messenger_dir) 
             for default_messenger_dir in self.default_device_messengers_dirs_names
         )
 
@@ -303,8 +291,6 @@ class ImagesSearcher(ImagesRestore):
 
 
     def search_files_handler(self):
-        # NOTE: вообще вместо фильтрация полученных элементов попробовать в прыдущих вызовах вместо пустого словаря вернуть False или empty dict
-
         lst = []
 
         for found_default_dir_from_device in self._get_default_dirs_from_device():
@@ -314,7 +300,7 @@ class ImagesSearcher(ImagesRestore):
                 {found_default_dir_from_device.name: self._search_files(found_default_dir_from_device)}
             )
 
-        # pprint(lst)
+        pprint(lst)
 
         # for i in lst:
         #     pprint(i)
