@@ -143,13 +143,20 @@ class ImagesRestore():
         ))
 
 
-@dataclass(repr=False)
+@dataclass()
 class Image:
-    __slots__ = ['path', 'type', 'hash']
+    __slots__ = ('path', 'type', 'hash')
     
     path: str
     type: str
     hash: str
+
+    def _get_file_hash(self):
+        with open(self.path, 'rb') as f:
+            return md5(f.read()).hexdigest()
+
+    def __post_init__(self):
+        self.hash = self._get_file_hash()
 
     def __eq__(self, other):
         if isinstance(other, Image):
@@ -161,10 +168,7 @@ class ImagesSearcher(ImagesRestore):
     TODO: add progress bar.
     TODO: encode dirs names
 
-    FIXME: also remove duplicates of images.
-    Перед тем как проверять фото на различия - сначала требуется удалить дубликаты.
-
-    NOTE: подумать , стоит ли определять типы файлов в данном классе , т.к. сравнение на различие не будет требовать Pillow
+    TODO: recognize is image removed
     """
 
     def __init__(self, **kwargs):
@@ -230,51 +234,24 @@ class ImagesSearcher(ImagesRestore):
             image for image in images if self._is_images_different(image.path)
         ]
 
-    @staticmethod
-    def _get_file_hash(filepath):
-        with open(filepath, 'rb') as f:
-            return md5(f.read()).hexdigest()
-
     def _remove_duplicates_handler(self, folder_data):
-        """
-        TODO: 
-        1. отсортировать по расширениям
-        2. удалить дубли у каждой отдельной группы расширений
-        3. вернуть обратно словарь
-        """
-        if not folder_data:
-            return
+        images_jpeg, images_png = (
+            {image_obj.hash: image_obj for image_obj in folder_data if image_obj.type == ext} for ext in ('jpeg', 'png')
+        )
         
-
-        ######
-        images_jpeg, imags_png = filter(lambda x: x.type == 'jpeg', folder_data), filter(lambda x: x.type == 'png', folder_data)
-
-        # pprint(list(images_jpeg))
-        # pprint(list(imags_png))
-        
-        ######
-        add_hashes_to_imgs = lambda image: image._replace(hash=self._get_file_hash(image.path))
-        images_jpeg_with_hashes, images_png_with_hashes = map(add_hashes_to_imgs, images_jpeg), map(add_hashes_to_imgs, imags_png)
-
-        pprint(list(images_jpeg_with_hashes))
-        pprint(list(images_png_with_hashes))
-
-        #####
-        
-
-
-        print('////')
+        return it.chain(
+            images_jpeg.values(), images_png.values()
+        )
 
     def _recognize_files_type(self, files):
         found_images = []
-        FoundImage = cs.namedtuple('FoundImage', ['path', 'type', 'hash'], defaults=(None,))
 
         for file in files:
             file_type = magic.from_file(file, mime=True)
 
             if file_type.startswith('image'):
                 found_images.append(
-                    FoundImage(file, file_type.split('/')[-1])
+                    Image(path=file, type=file_type.split('/')[-1], hash='')
                 )
 
         return found_images
@@ -292,10 +269,13 @@ class ImagesSearcher(ImagesRestore):
 
         new_images = self._remove_duplicates_handler(images)
 
-        # pprint(new_images)
+        # try:
+        #     pprint(list(new_images))
+        # except TypeError:
+        #     print('Lol')
 
 
-        return images
+        return new_images
 
         # return \
         # self._is_images_removed(
@@ -333,6 +313,8 @@ class ImagesSearcher(ImagesRestore):
             lst.append(
                 {found_default_dir_from_device.name: self._search_files(found_default_dir_from_device)}
             )
+
+        # pprint(lst)
 
         # for i in lst:
         #     pprint(i)
