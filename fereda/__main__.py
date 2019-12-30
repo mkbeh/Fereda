@@ -165,6 +165,7 @@ class ImagesSearcher(ImagesRestore, Image):
     """
     TODO: add progress bar.
     TODO: encode dirs names
+    TODO: refactor: _get_images_from_default_dirs and _recognize_files_type
     """
 
     def __init__(self, **kwargs):
