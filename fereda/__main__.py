@@ -165,7 +165,6 @@ class ImagesSearcher(ImagesRestore, Image):
     """
     TODO: add progress bar.
     TODO: encode dirs names
-    TODO: refactor: _get_images_from_default_dirs and _recognize_files_type
     
     NOTE: сравнить производительность кучи или другой структуры данных - для замена списка
     """
@@ -203,19 +202,11 @@ class ImagesSearcher(ImagesRestore, Image):
         self.search_files_handler()
 
     def _get_images_from_default_dirs(self):
-        images = []
-
-        for default_images_dir in self._default_device_images_dirs:
-            for file in self._dirs_walker(default_images_dir):
-                file_type = magic.from_file(file, mime=True)
-
-                if file_type.startswith('image'):
-                    images.append(
-                        Image(path=file, type=file_type.split('/')[-1], hash='')
-                    )
-
-        return (
-            image for image in images
+        return it.chain(
+            *(
+                self._set_info_to_images(self._dirs_walker(default_images_dir))
+                for default_images_dir in self._default_device_images_dirs
+            )
         )
 
     def _is_image_removed(self, image):
@@ -231,7 +222,8 @@ class ImagesSearcher(ImagesRestore, Image):
             image for image in images if self._is_image_removed(image)
         )
 
-    def _remove_duplicates(self, folder_data):
+    @staticmethod
+    def _remove_duplicates(folder_data):
         images_jpeg, images_png = (
             {image_obj.hash: image_obj for image_obj in folder_data if image_obj.type == ext} for ext in ('jpeg', 'png')
         )
@@ -240,7 +232,8 @@ class ImagesSearcher(ImagesRestore, Image):
             images_jpeg.values(), images_png.values()
         )
 
-    def _recognize_files_type(self, files):
+    @staticmethod
+    def _set_info_to_images(files):
         found_images = []
 
         for file in files:
@@ -265,7 +258,7 @@ class ImagesSearcher(ImagesRestore, Image):
         return \
             self._delete_non_removed_images(
                 self._remove_duplicates(
-                    self._recognize_files_type(
+                    self._set_info_to_images(
                         self._dirs_walker(
                             search_directory.path
                         )
