@@ -166,6 +166,8 @@ class ImagesSearcher(ImagesRestore, Image):
     TODO: add progress bar.
     TODO: encode dirs names
     TODO: refactor: _get_images_from_default_dirs and _recognize_files_type
+    
+    NOTE: сравнить производительность кучи или другой структуры данных - для замена списка
     """
 
     def __init__(self, **kwargs):
@@ -216,17 +218,17 @@ class ImagesSearcher(ImagesRestore, Image):
             image for image in images
         )
 
-    def _is_image_in_images_from_default_dirs(self, image):
+    def _is_image_removed(self, image):
         self._images_from_default_dirs, images_from_default_dirs_cp = it.tee(self._images_from_default_dirs, 2)
         results = (image == image_from_default_dir for image_from_default_dir in images_from_default_dirs_cp)
 
-        return True if True in results else False
+        return False if True in results else True
 
         
 
     def _delete_non_removed_images(self, images):
         return tuple(
-            image for image in images if not self._is_image_in_images_from_default_dirs(image)
+            image for image in images if self._is_image_removed(image)
         )
 
     def _remove_duplicates(self, folder_data):
