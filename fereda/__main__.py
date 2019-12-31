@@ -13,7 +13,6 @@ import magic
 from dataclasses import dataclass
 from hashlib import md5
 
-from fereda import utils
 from fereda import exceptions
 
 from pprint import pprint
@@ -122,12 +121,16 @@ class ImagesRestore():
 
     @staticmethod
     def _get_image_restore_path(image_obj, associated_dir_path):
+        image_name = ''
+
         if not image_obj.path.endswith(image_obj.type):
-            image_obj = image_obj._replace(path=image_obj.path + '.' + image_obj.type)
+            image_name = image_obj.path + '.' + image_obj.type
+        else:
+            image_name = image_obj.path
 
         return os.path.join(
             associated_dir_path,
-            image_obj.path.split('/')[-1]
+            image_name.split('/')[-1]
         )
 
     def _create_associated_dir(self, associated_dir_name):
@@ -175,6 +178,7 @@ class ImagesSearcher(ImagesRestore, Image):
     """
     TODO: add progress bar.
     TODO: encode dirs names
+    TODO: сделать так , чтобы писалось к примеру Telegram(External) и Telegram(Internal) так же и с остальными мессенджерами
     
     NOTE: сравнить производительность кучи или другой структуры данных - для замена списка
     """
@@ -185,13 +189,17 @@ class ImagesSearcher(ImagesRestore, Image):
         self._default_android_point_dir = 'Android/data'
 
         self.default_android_data_dirs_names = (
-            # Galleries parts of dirs names on various devices.
-            'gallery',                                          # Samsung dir name 
-            'photos',                                           # Redmi Go dir 
-            'camera',
+            # Galleries on various devices.
+            'gallery',                                          # Samsung
+            'photos',                                           # RedmiGo
+            'camera',                                           # Micromax
 
-            # Messengers parts of dirs names.
+            # Messaging (MMS)
+            'messaging',
+
+            # Messengers.
             'telegram',
+            'vkontakte',
         )
 
         self.default_device_messengers_dirs_names = (
@@ -303,19 +311,16 @@ class ImagesSearcher(ImagesRestore, Image):
             )
         )
 
-        pprint(list(data_to_restore))
+        data_to_restore = cs.ChainMap(*data_to_restore)
 
+        if not data_to_restore:
+            raise exceptions.NoDataToRestore()
 
-        # data_to_restore = utils.merge_dicts_in_seq(data_to_restore)       # REPLACE TO CHAINMAP!!!!!!!! AND REMOVE UTIL!!!!! ?????
+        DisplayInfo.show_found_data_info(data_to_restore)
 
-        # if not data_to_restore:
-        #     raise exceptions.NoDataToRestore()
-
-        # DisplayInfo.show_found_data_info(data_to_restore)
-
-        # if self._restore_data_flag:
-        #     print(DisplayInfo.begin_restoring.value)
-        #     self.restore_data(data_to_restore)
+        if self._restore_data_flag:
+            print(DisplayInfo.begin_restoring.value)
+            self.restore_data(data_to_restore)
 
 
 def options_handler(**kwargs):
@@ -337,7 +342,6 @@ def cli():
 
     print(parser.parse_args())
 
-    
     try:
         args = parser.parse_args()
         print(DisplayInfo.start.value)
