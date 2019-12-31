@@ -147,7 +147,6 @@ class ImagesRestore():
 
             for image_obj in images_objs:
                 image_restore_path = self._get_image_restore_path(image_obj, associated_dir_path)
-                # pprint(image_obj.path)
                 self._move_or_copy_restored_images(image_obj.path, image_restore_path)
 
         print(DisplayInfo.restore_images_num.value.format(
@@ -355,7 +354,7 @@ def cli():
     parser.add_argument('-m', '--move-files', action='store_true')
     parser.add_argument('-o', '--output-dir', default='Fereda_Data', metavar='')
 
-    print(parser.parse_args())
+    print(parser.parse_args())      # NOTE: TO REMOVE!!!!
 
     try:
         args = parser.parse_args()
