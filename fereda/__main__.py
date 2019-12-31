@@ -162,8 +162,7 @@ class Image:
 class ImagesSearcher(ImagesRestore, Image):
     """
     TODO: add progress bar.
-    
-    NOTE: сравнить производительность кучи или другой структуры данных - для замена списка
+    TODO: сравнить производительность кучи или другой структуры данных - для замена списка
     """
 
     def __init__(self, **kwargs):
