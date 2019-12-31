@@ -91,7 +91,7 @@ class DisplayInfo(enum.Enum):
         print(' ' * 3 + '-' * (len(header) - 3))
 
         for name, data in data.items():
-            print("{:>11} {:>18}".format(name, len(data)))
+            print("   {:<18} {:>11}".format(name, len(data)))
 
         print(' ' * 3 + '-' * (len(header) - 3), '\n')
 
@@ -147,6 +147,7 @@ class ImagesRestore():
 
             for image_obj in images_objs:
                 image_restore_path = self._get_image_restore_path(image_obj, associated_dir_path)
+                # pprint(image_obj.path)
                 self._move_or_copy_restored_images(image_obj.path, image_restore_path)
 
         print(DisplayInfo.restore_images_num.value.format(
@@ -177,8 +178,6 @@ class Image:
 class ImagesSearcher(ImagesRestore, Image):
     """
     TODO: add progress bar.
-    TODO: encode dirs names
-    TODO: сделать так , чтобы писалось к примеру Telegram(External) и Telegram(Internal) так же и с остальными мессенджерами
     
     NOTE: сравнить производительность кучи или другой структуры данных - для замена списка
     """
@@ -301,12 +300,27 @@ class ImagesSearcher(ImagesRestore, Image):
 
         return it.chain(found_android_data_dirs, found_device_messengers_dirs)
 
+    @staticmethod
+    def _rename_dir(dir_name):
+        system_messengers_names = (
+            'telegram', 
+            'vkontakte',
+        )
+        user_messengers_names = (
+            'Telegram', 
+            'VK',
+        )
+
+        if dir_name in system_messengers_names:
+            return dir_name.capitalize() + ' (System)'
+
+        return dir_name + ' (User)'
 
     def search_files_handler(self):
         data_to_restore = filter(
             lambda x: len(*x.values()) > 0,
             (
-                {found_default_dir_from_device.name: self._search_files(found_default_dir_from_device)}
+                {self._rename_dir(found_default_dir_from_device.name): self._search_files(found_default_dir_from_device)}
                 for found_default_dir_from_device in self._get_default_dirs_from_device()
             )
         )
@@ -329,6 +343,7 @@ def options_handler(**kwargs):
 
 def cli():
     os.system('clear')
+
     print(DisplayInfo.preview_img.value)
     print(DisplayInfo.author.value)
 
