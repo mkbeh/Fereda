@@ -33,7 +33,7 @@ PREVIEW_IMG = '''\u001b[0m
 //////////////////////////////////////////////////////////////////////////////
 '''
 
-STDOUT = []
+STDOUT = cs.deque()
 OFF_PROGRESSBAR_FLAG = []
 
 
@@ -261,7 +261,7 @@ class ImagesSearcher(ImagesRestore, Image):
 
     @staticmethod
     def _set_info_to_images(files):
-        found_images = []
+        found_images = cs.deque()
 
         for file in files:
             file_type = magic.from_file(file, mime=True)
