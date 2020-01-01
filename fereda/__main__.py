@@ -7,18 +7,19 @@ import shutil
 import argparse
 import itertools as it
 import collections as cs
+import functools
 
 import magic
 
 from dataclasses import dataclass
 from hashlib import md5
 
-from fereda import exceptions
+from fereda import exceptions, decorators
 
 from pprint import pprint
 
 
-PREVIEW_IMG = '''
+PREVIEW_IMG = '''\u001b[0m
 //////////////////////////////////////////////////////////////////////////////
 //                                                                          //  
 // `7MM"""YMM `7MM"""YMM  `7MM"""Mq.  `7MM"""YMM  `7MM"""Yb.      db        //
@@ -31,6 +32,10 @@ PREVIEW_IMG = '''
 //                                                                          //  
 //////////////////////////////////////////////////////////////////////////////
 '''
+
+STDOUT = []
+OFF_PROGRESSBAR_FLAG = []
+
 
 class SelfDestruction():
     # TODO: Написать удаление программы.
@@ -74,16 +79,29 @@ class DisplayInfo(enum.Enum):
     no_data_to_restore      =   f'{templates.get("exception")} No data to restore. Removed or hide images not found.'
 
     @staticmethod
-    def show_found_data_info(data):
+    def show_info(info=None, include_found_data_info=False):
+        os.system('clear')
+
+        if info:
+            STDOUT.append(info)
+            
+        [print(msg) for msg in STDOUT]
+
+    @staticmethod
+    def add_found_data_info_to_stdout(data):
         header = "{:>7} {:>25}".format('Name','Summary')
-        print('\u001b[0m \n', ' ' * 2 + '-' * (len(header) - 3))
-        print(header)
-        print(' ' * 3 + '-' * (len(header) - 3))
+        separator = '\u001b[0m \n' + ' ' * 3 + '-' * (len(header) - 3)
+        separator1 = ' ' * 3 + '-' * (len(header) - 3)
+        end_line = ' ' * 3 + '-' * (len(header) - 3) + '\n'
+        
+        STDOUT.append(separator)
+        STDOUT.append(header)
+        STDOUT.append(separator1)
 
         for name, data in data.items():
-            print("   {:<18} {:>8}".format(name, len(data)))
+            STDOUT.append("   {:<18} {:>11}".format(name, len(data)))
 
-        print(' ' * 3 + '-' * (len(header) - 3), '\n')
+        STDOUT.append(end_line)
 
 
 class ImagesRestore():
@@ -137,11 +155,17 @@ class ImagesRestore():
 
             for image_obj in images_objs:
                 image_restore_path = self._get_image_restore_path(image_obj, associated_dir_path)
+                
+                if not OFF_PROGRESSBAR_FLAG[0]:
+                    decorators.show_progress(STDOUT)
+                
                 self._move_or_copy_restored_images(image_obj.path, image_restore_path)
 
-        print(DisplayInfo.restore_images_num.value.format(
-            self._get_sum_of_restored_images(data_to_restore)
-        ))
+        DisplayInfo.show_info(
+            DisplayInfo.restore_images_num.value.format(
+                self._get_sum_of_restored_images(data_to_restore)
+            )
+        )
 
 
 @dataclass()
@@ -166,8 +190,7 @@ class Image:
 
 class ImagesSearcher(ImagesRestore, Image):
     """
-    TODO: add progress bar.
-    TODO: сравнить производительность кучи или другой структуры данных - для замена списка
+    TODO: сравнить производительность кучи или другой структуры данных - для замена списка    
     """
 
     def __init__(self, **kwargs):
@@ -203,7 +226,7 @@ class ImagesSearcher(ImagesRestore, Image):
         self._images_from_default_dirs = self._get_images_from_default_dirs()
 
     def __call__(self):
-        print(DisplayInfo.images_searcher.value)
+        DisplayInfo.show_info(DisplayInfo.images_searcher.value)
         self.search_files_handler()
 
     def _get_images_from_default_dirs(self):
@@ -214,13 +237,12 @@ class ImagesSearcher(ImagesRestore, Image):
             )
         )
 
+    @decorators.progressbar(STDOUT, OFF_PROGRESSBAR_FLAG)
     def _is_image_removed(self, image):
         self._images_from_default_dirs, images_from_default_dirs_cp = it.tee(self._images_from_default_dirs, 2)
         results = (image == image_from_default_dir for image_from_default_dir in images_from_default_dirs_cp)
 
         return False if True in results else True
-
-        
 
     def _delete_non_removed_images(self, images):
         return tuple(
@@ -229,12 +251,12 @@ class ImagesSearcher(ImagesRestore, Image):
 
     @staticmethod
     def _remove_duplicates(folder_data):
-        images_jpeg, images_png = (
-            {image_obj.hash: image_obj for image_obj in folder_data if image_obj.type == ext} for ext in ('jpeg', 'png')
+        images_jpeg, images_png, images_gif = (
+            {image_obj.hash: image_obj for image_obj in folder_data if image_obj.type == ext} for ext in ('jpeg', 'png', 'gif')
         )
         
         return it.chain(
-            images_jpeg.values(), images_png.values()
+            images_jpeg.values(), images_png.values(), images_gif.values()
         )
 
     @staticmethod
@@ -317,8 +339,9 @@ class ImagesSearcher(ImagesRestore, Image):
 
         if not data_to_restore:
             raise exceptions.NoDataToRestore()
-
-        DisplayInfo.show_found_data_info(data_to_restore)
+        
+        DisplayInfo.add_found_data_info_to_stdout(data_to_restore)
+        DisplayInfo.show_info()
 
         if self._restore_data_flag:
             print(DisplayInfo.begin_restoring.value)
@@ -326,15 +349,13 @@ class ImagesSearcher(ImagesRestore, Image):
 
 
 def options_handler(**kwargs):
+    OFF_PROGRESSBAR_FLAG.append(kwargs.get('off_progressbar'))
     ImagesSearcher(**kwargs)()
 
 
 def cli():
-    # TODO: remove print parse_args
-    os.system('clear')
-
-    print(DisplayInfo.preview_img.value)
-    print(DisplayInfo.author.value)
+    DisplayInfo.show_info(DisplayInfo.preview_img.value)
+    DisplayInfo.show_info(DisplayInfo.author.value)
 
     start = time.time()
 
@@ -342,20 +363,21 @@ def cli():
     parser.add_argument('-r', '--restore-data', action='store_true')
     parser.add_argument('-s', '--self-destruction', action='store_true')
     parser.add_argument('-m', '--move-files', action='store_true')
+    parser.add_argument('-p', '--off-progressbar', action='store_true')                                     # It will improve performance
     parser.add_argument('-o', '--output-dir', default='Fereda_Data', metavar='')
-
-    print(parser.parse_args())
 
     try:
         args = parser.parse_args()
-        print(DisplayInfo.start.value)
+        DisplayInfo.show_info(DisplayInfo.start.value)
         options_handler(**vars(args))
     except exceptions.NoDataToRestore:
         print(DisplayInfo.no_data_to_restore.value)
 
-    print(DisplayInfo.elapsed_time.value.format(
-        float('{:.3f}'.format(time.time() - start))
-        ) + 's\n')
+    DisplayInfo.show_info(
+        DisplayInfo.elapsed_time.value.format(
+            float('{:.3f}'.format(time.time() - start))
+        )  + 's\n'
+    )
 
 if __name__ == "__main__":
     cli()
