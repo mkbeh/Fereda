@@ -76,7 +76,7 @@ class DisplayInfo(enum.Enum):
         print(' ' * 3 + '-' * (len(header) - 3))
 
         for name, data in data.items():
-            print("   {:<18} {:>11}".format(name, len(data)))
+            print("   {:<18} {:>8}".format(name, len(data)))
 
         print(' ' * 3 + '-' * (len(header) - 3), '\n')
 
