@@ -19,13 +19,17 @@ from pprint import pprint
 
 
 PREVIEW_IMG = '''
-`7MM"""YMM `7MM"""YMM  `7MM"""Mq.  `7MM"""YMM  `7MM"""Yb.      db      
-  MM    `7   MM    `7    MM   `MM.   MM    `7    MM    `Yb.   ;MM:     
-  MM   d     MM   d      MM   ,M9    MM   d      MM     `Mb  ,V^MM.    
-  MM""MM     MMmmMM      MMmmdM9     MMmmMM      MM      MM ,M  `MM    
-  MM   Y     MM   Y  ,   MM  YM.     MM   Y  ,   MM     ,MP AbmmmqMA   
-  MM         MM     ,M   MM   `Mb.   MM     ,M   MM    ,dP'A'     VML  
-.JMML.     .JMMmmmmMMM .JMML. .JMM..JMMmmmmMMM .JMMmmmdP'.AMA.   .AMMA.
+////////////////////////////////////////////////////////////////////////////
+//                                                                        //  
+// `7MM"""YMM `7MM"""YMM  `7MM"""Mq.  `7MM"""YMM  `7MM"""Yb.      db      //
+//   MM    `7   MM    `7    MM   `MM.   MM    `7    MM    `Yb.   ;MM:     //
+//   MM   d     MM   d      MM   ,M9    MM   d      MM     `Mb  ,V^MM.    //
+//   MM""MM     MMmmMM      MMmmdM9     MMmmMM      MM      MM ,M  `MM    //
+//   MM   Y     MM   Y  ,   MM  YM.     MM   Y  ,   MM     ,MP AbmmmqMA   //
+//   MM         MM     ,M   MM   `Mb.   MM     ,M   MM    ,dP'A'     VML  //
+// .JMML.     .JMMmmmmMMM .JMML. .JMM..JMMmmmmMMM .JMMmmmdP'.AMA.   .AMMA.//
+//                                                                        //  
+////////////////////////////////////////////////////////////////////////////
 '''
 
 class SelfDestruction():
@@ -56,7 +60,7 @@ class DisplayInfo(enum.Enum):
 
     # Info messages.
     preview_img             =   f'{PREVIEW_IMG}'
-    author                  =   '\t\t||| CREATED BY R3N3V4L TEAM |>\n'
+    author                  =   f'{colors.get("red")}\t\t\t||| CREATED BY R3N3V4L TEAM |>\n{colors.get("reset")}'
     start                   =   f'{templates.get("arrow")} Utility started...'
     images_searcher         =   f'{templates.get("arrow")} Running searcher of removed and hidden images...'
     remove_duplicates       =   f'{templates.get("arrow")} Removing duplicates of found images...'
