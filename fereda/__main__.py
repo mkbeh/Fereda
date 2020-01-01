@@ -65,9 +65,11 @@ class DisplayInfo(enum.Enum):
     images_searcher         =   f'{templates.get("arrow")} Running searcher of removed and hidden images...'
     remove_duplicates       =   f'{templates.get("arrow")} Removing duplicates of found images...'
     begin_restoring         =   f'{templates.get("arrow")} Running restore of found images...'
-    restore_images_num      =   templates.get("arrow") + ' Summary restored' + colors.get('cyan') + ' {} ' + colors.get('green')  + 'images'
+    restore_images_num      =   templates.get("arrow") + ' Summary restored' + colors.get('cyan') + ' {} ' \
+                                     + colors.get('green')  + 'images'
     self_destruction        =   templates.get("star_with_arrow") + ' Removing utility from device...'
-    elapsed_time            =   templates.get("lattice") + ' Elapsed time: ' + colors.get('cyan') + '{}' + colors.get('reset')
+    elapsed_time            =   templates.get("lattice") + ' Elapsed time: ' + colors.get('cyan') + '{}' \
+                                     + colors.get('reset')
 
     # Exceptions messages.
     no_data_to_restore      =   f'{templates.get("exception")} No data to restore. Removed or hide images not found.'
