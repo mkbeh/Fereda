@@ -39,7 +39,11 @@ OFF_PROGRESSBAR_FLAG = []
 
 class SelfDestruction():
     # TODO: Написать удаление программы.
-    pass
+    
+    def destruction(self):
+        # .....
+
+        DisplayInfo.show_info(DisplayInfo.self_destruction_ok.value)
 
 
 class DisplayInfo(enum.Enum):
@@ -71,7 +75,8 @@ class DisplayInfo(enum.Enum):
     begin_restoring         =   f'{templates.get("arrow")} Running restore of found images...'
     restore_images_num      =   templates.get("arrow") + ' Summary restored' + colors.get('cyan') + ' {} ' \
                                      + colors.get('green') + 'images'
-    self_destruction        =   templates.get("star_with_arrow") + ' Removing utility from device...'
+    self_destruction        =   templates.get("star_with_arrow") + colors.get('yellow') + ' Removing utility from device...'
+    self_destruction_ok     =   templates.get("star_with_arrow") + colors.get('yellow') + ' Utility was successfully removed from the device.'
     elapsed_time            =   templates.get("lattice") + ' Elapsed time: ' + colors.get('cyan') + '{}' \
                                      + colors.get('reset')
 
@@ -188,14 +193,12 @@ class Image:
             return self.type == other.type and self.hash == other.hash
 
 
-class ImagesSearcher(ImagesRestore, Image):
-    """
-    TODO: сравнить производительность кучи или другой структуры данных - для замена списка    
-    """
+class ImagesSearcher(ImagesRestore, Image, SelfDestruction):
 
     def __init__(self, **kwargs):
         super().__init__(kwargs['output_dir'], kwargs['move_files'])
         self._restore_data_flag = kwargs['restore_data']
+        self._self_destruction_flag = kwargs['self_destruction']
         self._default_android_point_dir = 'Android/data'
 
         self.default_android_data_dirs_names = (
@@ -346,6 +349,10 @@ class ImagesSearcher(ImagesRestore, Image):
         if self._restore_data_flag:
             DisplayInfo.show_info(DisplayInfo.begin_restoring.value)
             self.restore_data(data_to_restore)
+
+        if self._self_destruction_flag:
+            DisplayInfo.show_info(DisplayInfo.self_destruction.value)
+            self.destruction()
 
 
 def options_handler(**kwargs):
