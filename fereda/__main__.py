@@ -57,7 +57,6 @@ class DisplayInfo(enum.Enum):
         'exception'             :   f'{colors.get("cyan")}!!{colors.get("red")}',
     }
 
-
     # Info messages.
     preview_img             =   f'{PREVIEW_IMG}'
     author                  =   f'{colors.get("red")}\t\t\t||| CREATED BY R3N3V4L TEAM |>\n{colors.get("reset")}'
@@ -66,7 +65,7 @@ class DisplayInfo(enum.Enum):
     remove_duplicates       =   f'{templates.get("arrow")} Removing duplicates of found images...'
     begin_restoring         =   f'{templates.get("arrow")} Running restore of found images...'
     restore_images_num      =   templates.get("arrow") + ' Summary restored' + colors.get('cyan') + ' {} ' \
-                                     + colors.get('green')  + 'images'
+                                     + colors.get('green') + 'images'
     self_destruction        =   templates.get("star_with_arrow") + ' Removing utility from device...'
     elapsed_time            =   templates.get("lattice") + ' Elapsed time: ' + colors.get('cyan') + '{}' \
                                      + colors.get('reset')
@@ -331,6 +330,7 @@ def options_handler(**kwargs):
 
 
 def cli():
+    # TODO: remove print parse_args
     os.system('clear')
 
     print(DisplayInfo.preview_img.value)
@@ -344,7 +344,7 @@ def cli():
     parser.add_argument('-m', '--move-files', action='store_true')
     parser.add_argument('-o', '--output-dir', default='Fereda_Data', metavar='')
 
-    print(parser.parse_args())      # NOTE: TO REMOVE!!!!
+    print(parser.parse_args())
 
     try:
         args = parser.parse_args()
