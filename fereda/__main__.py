@@ -64,7 +64,7 @@ class DisplayInfo(enum.Enum):
 
     # Info messages.
     preview_img             =   f'{PREVIEW_IMG}'
-    author                  =   f'{colors.get("red")}\t\t\t||| CREATED BY R3N3V4L TEAM |>\n{colors.get("reset")}'
+    author                  =   f'{colors.get("red")}\t\t\t   ||| CREATED BY R3N3V4L TEAM |>\n{colors.get("reset")}'
     start                   =   f'{templates.get("arrow")} Utility started...'
     images_searcher         =   f'{templates.get("arrow")} Running searcher of removed and hidden images...'
     remove_duplicates       =   f'{templates.get("arrow")} Removing duplicates of found images...'
