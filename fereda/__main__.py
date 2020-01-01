@@ -20,17 +20,17 @@ from pprint import pprint
 
 
 PREVIEW_IMG = '''\u001b[0m
-//////////////////////////////////////////////////////////////////////////////
-//                                                                          //  
-// `7MM"""YMM `7MM"""YMM  `7MM"""Mq.  `7MM"""YMM  `7MM"""Yb.      db        //
-//   MM    `7   MM    `7    MM   `MM.   MM    `7    MM    `Yb.   ;MM:       //
-//   MM   d     MM   d      MM   ,M9    MM   d      MM     `Mb  ,V^MM.      //
-//   MM""MM     MMmmMM      MMmmdM9     MMmmMM      MM      MM ,M  `MM      //
-//   MM   Y     MM   Y  ,   MM  YM.     MM   Y  ,   MM     ,MP AbmmmqMA     //
-//   MM         MM     ,M   MM   `Mb.   MM     ,M   MM    ,dP'A'     VML    //
-// .JMML.     .JMMmmmmMMM .JMML. .JMM..JMMmmmmMMM .JMMmmmdP'.AMA.   .AMMA.  //
-//                                                                          //  
-//////////////////////////////////////////////////////////////////////////////
+   //////////////////////////////////////////////////////////////////////////////
+   //                                                                          //  
+   // `7MM"""YMM `7MM"""YMM  `7MM"""Mq.  `7MM"""YMM  `7MM"""Yb.      db        //
+   //   MM    `7   MM    `7    MM   `MM.   MM    `7    MM    `Yb.   ;MM:       //
+   //   MM   d     MM   d      MM   ,M9    MM   d      MM     `Mb  ,V^MM.      //
+   //   MM""MM     MMmmMM      MMmmdM9     MMmmMM      MM      MM ,M  `MM      //
+   //   MM   Y     MM   Y  ,   MM  YM.     MM   Y  ,   MM     ,MP AbmmmqMA     //
+   //   MM         MM     ,M   MM   `Mb.   MM     ,M   MM    ,dP'A'     VML    //
+   // .JMML.     .JMMmmmmMMM .JMML. .JMM..JMMmmmmMMM .JMMmmmdP'.AMA.   .AMMA.  //
+   //                                                                          //  
+   //////////////////////////////////////////////////////////////////////////////
 '''
 
 STDOUT = cs.deque()
@@ -344,7 +344,7 @@ class ImagesSearcher(ImagesRestore, Image):
         DisplayInfo.show_info()
 
         if self._restore_data_flag:
-            print(DisplayInfo.begin_restoring.value)
+            DisplayInfo.show_info(DisplayInfo.begin_restoring.value)
             self.restore_data(data_to_restore)
 
 
