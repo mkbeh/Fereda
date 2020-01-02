@@ -5,6 +5,7 @@ import time
 import enum
 import shutil
 import argparse
+import subprocess
 import itertools as it
 import collections as cs
 import functools
@@ -14,7 +15,7 @@ import magic
 from dataclasses import dataclass
 from hashlib import md5
 
-from fereda import exceptions, decorators
+from fereda import __version__, exceptions, decorators
 
 from pprint import pprint
 
@@ -38,12 +39,16 @@ OFF_PROGRESSBAR_FLAG = []
 
 
 class SelfDestruction():
-    # TODO: Написать удаление программы.
+    # TODO: Написать удаление программы именно с телефона с компа не надо.
+    _operation_system = subprocess.check_output(['uname', '-o']).decode('utf-8')
     
     def destruction(self):
-        # .....
+        pass
 
-        DisplayInfo.show_info(DisplayInfo.self_destruction_ok.value)
+    def destruction_handler(self):
+        if self._operation_system != 'GNU/Linux':
+            self.destruction()
+            DisplayInfo.show_info(DisplayInfo.self_destruction_ok.value)
 
 
 class DisplayInfo(enum.Enum):
@@ -68,7 +73,7 @@ class DisplayInfo(enum.Enum):
 
     # Info messages.
     preview_img             =   f'{PREVIEW_IMG}'
-    author                  =   f'{colors.get("red")}\t\t\t   ||| CREATED BY R3N3V4L TEAM |>\n{colors.get("reset")}'
+    author                  =   f'{colors.get("red")}\t\t\t   ||| CREATED BY R3N3V4L TEAM |> v{__version__}\n{colors.get("reset")}'
     start                   =   f'{templates.get("arrow")} Utility started...'
     images_searcher         =   f'{templates.get("arrow")} Running searcher of removed and hidden images...'
     remove_duplicates       =   f'{templates.get("arrow")} Removing duplicates of found images...'
@@ -194,13 +199,15 @@ class Image:
             return self.type == other.type and self.hash == other.hash
 
 
-class ImagesSearcher(ImagesRestore, Image, SelfDestruction):
+class ImagesSearcher(ImagesRestore, Image):
 
     def __init__(self, **kwargs):
         super().__init__(kwargs['output_dir'], kwargs['move_files'])
         self._restore_data_flag = kwargs['restore_data']
         self._self_destruction_flag = kwargs['self_destruction']
         self._default_android_point_dir = 'Android/data'
+
+        self._utility_destruction = SelfDestruction()
 
         self.default_android_data_dirs_names = (
             # Galleries on various devices.
@@ -353,7 +360,7 @@ class ImagesSearcher(ImagesRestore, Image, SelfDestruction):
 
         if self._self_destruction_flag:
             DisplayInfo.show_info(DisplayInfo.self_destruction.value)
-            self.destruction()
+            self._utility_destruction.destruction_handler()
 
 
 def options_handler(**kwargs):

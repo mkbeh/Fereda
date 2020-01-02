@@ -56,7 +56,7 @@ function installUtil {
     fi
 }
 
-    echo "[+] Util was successfully installed. To use it run command: 'fereda -h'"
+    echo "[+] Util was successfully installed. To use it run command: '~/.local/bin/fereda -h'"
 }
 
 
@@ -144,5 +144,15 @@ fi
 
 # TODO: сделать установку пакетов на андрюше и переходы в нужные директории
 # TODO: добавить цветной вывод и слипы
+
 # TODO: сразу после инсталяции тулкита удалять всю директорию утилиты и оставлять только сам скрипт
+
+# Для linux (как пример)
+# ~/.local/lib/python3.7/site-packages/Fereda-0.1-py3.7.egg
+# ~/.local/bin/fereda
+# и директорию утилиты
+
+# Для Android
+# ....
+
 # TODO: сделать обфускацию кода https://stackoverflow.com/questions/3344115/how-to-obfuscate-python-code-effectively
