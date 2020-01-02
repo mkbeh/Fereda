@@ -82,6 +82,7 @@ class DisplayInfo(enum.Enum):
 
     # Exceptions messages.
     no_data_to_restore      =   f'{templates.get("exception")} No data to restore. Removed or hide images not found.'
+    incorrect_start_dir     =   f'{templates.get("exception")} Incorrect start directory, change current directory to user directory.\n'
 
     @staticmethod
     def show_info(info=None, include_found_data_info=False):
@@ -386,6 +387,10 @@ def cli():
         )  + 's\n'
     )
 
+
 if __name__ == "__main__":
-    cli()
+    try:
+        cli()
+    except FileNotFoundError:
+        DisplayInfo.show_info(DisplayInfo.incorrect_start_dir.value)
  

@@ -6,7 +6,7 @@ setup(
     name='Fereda',
     version=__version__,
     description='Cyber security tool for Android images (removed or hide) restoring.',
-    author='mkbeh',
+    author='R3N3V4L TEAM',
     platforms='linux',
     install_requires=[
         'python-magic==0.4.15',
