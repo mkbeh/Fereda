@@ -33,8 +33,8 @@ PREVIEW_IMG = PREVIEW_IMG = '''\u001b[0m
 `*  |    |___ |  \ |___ |__/ |  |  *`
 `*                                 *` 
  """""""""""""""""""""""""""""""""""
- \u001b[31m||| CREATED BY R3N3V4L TEAM |> v0.1\u001b[0m \n
-'''
+ \u001b[31m||| CREATED BY R3N3V4L TEAM |> v{}\u001b[0m \n
+'''.format(__version__)
 
 STDOUT = cs.deque()
 OFF_PROGRESSBAR_FLAG = []
