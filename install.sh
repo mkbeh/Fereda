@@ -41,22 +41,10 @@ function getLatestPackageInDir {
 }
 
 
-# Разобраться что за хня кривая ниже!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 function installUtil {
     $INSTALLED_PYTHON_VERSION setup.py bdist_egg --exclude-source-files
     package=$(getLatestPackageInDir)
     $INSTALLED_PYTHON_VERSION -m easy_install --user dist/"${package}"
-
-    function installRequirements {
-    if [[ "$OPERATION_SYSTEM" == "Android" ]]; then
-        echo "::> Installing requirements for $OPERATION_SYSTEM..."
-        installUtil
-    else
-        echo "::> To installing Fereda util in debug mode previously you need to install Python (supported versions: ${SUPPORTED_PYTHON_VERSIONS[*]})." \
-             "Use this guidehttps://realpython.com/installing-python/#ubuntu to istall Python."
-    fi
-}
-
     success_installing=$('[+] Util was successfully installed. To use it run command: ')
 
     if [[ "$OPERATION_SYSTEM" == "Android" ]]; then
@@ -84,9 +72,20 @@ function isPythonVersionSupport {
 }
 
 
+function installAndroidRequirements {
+    echo "::> Installing requirements for $OPERATION_SYSTEM..."
+
+    pkg update && pkg upgrade -y
+    termux-setup-storage
+    pkg install python
+    pkg install sox                           # fixed python-magic
+    # pkg install libjpeg-turbo clang         # Fixed Pillow
+}
+
+
 function installRequirements {
     if [[ "$OPERATION_SYSTEM" == "Android" ]]; then
-        echo "::> Installing requirements for $OPERATION_SYSTEM..."
+        installAndroidRequirements
         installUtil
     else
         echo "::> To installing Fereda util in debug mode previously you need to install Python (supported versions: ${SUPPORTED_PYTHON_VERSIONS[*]})." \
@@ -126,15 +125,7 @@ function battle {
     echo "::> Running battle mode..."
     isPythonInstalled
 
-    # pkg update && pkg upgrade -y
-
-    # в текущем месте сразу же появится директория storage
-    # нужно сделать > cd storage/shared и из этой директории можно будет запускать установленный скрипт
-    # termux-setup-storage
-
-    # pkg install python
-    # pkg install libjpeg-turbo clang     - fixed Pillow
-    # pkg install sox                     - fixed python-magic
+    cd .. && rm -rf Fereda
 }
 
 

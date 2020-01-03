@@ -7,7 +7,7 @@ setup(
     version=__version__,
     description='Cyber security tool for Android images (removed or hide) restoring.',
     author='R3N3V4L TEAM',
-    platforms='linux',
+    platforms='linux android',
     install_requires=[
         'python-magic==0.4.15',
     ],
