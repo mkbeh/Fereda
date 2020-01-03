@@ -41,6 +41,7 @@ function getLatestPackageInDir {
 }
 
 
+# Разобраться что за хня кривая ниже!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 function installUtil {
     $INSTALLED_PYTHON_VERSION setup.py bdist_egg --exclude-source-files
     package=$(getLatestPackageInDir)
@@ -56,7 +57,13 @@ function installUtil {
     fi
 }
 
-    echo "[+] Util was successfully installed. To use it run command: '~/.local/bin/fereda -h'"
+    success_installing=$('[+] Util was successfully installed. To use it run command: ')
+
+    if [[ "$OPERATION_SYSTEM" == "Android" ]]; then
+        echo "$success_installing 'fereda -h'"
+    else
+        echo "$success_installing '~/.local/bin/fereda -h'"
+    fi
 }
 
 
@@ -155,6 +162,7 @@ fi
 # и директорию утилиты
 
 # Для Android
+# /data/data/com.termux/files/home
 # ./.local/lib/python3.7/site-packages/Fereda-0.1-py3.7.egg
 # ./.local/bin/fereda
 # и директорию утилиты

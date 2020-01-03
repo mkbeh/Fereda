@@ -21,20 +21,19 @@ from pprint import pprint
 
 
 # TODO: add release to github
+# TODO: replace default output dir to DCIM/Fereda
+# TODO: поправить размер лого утилиты вручную и сделать его меньше длины самой длинной строки
 
 
-PREVIEW_IMG = '''\u001b[0m
-   //////////////////////////////////////////////////////////////////////////////
-   //                                                                          //  
-   // `7MM"""YMM `7MM"""YMM  `7MM"""Mq.  `7MM"""YMM  `7MM"""Yb.      db        //
-   //   MM    `7   MM    `7    MM   `MM.   MM    `7    MM    `Yb.   ;MM:       //
-   //   MM   d     MM   d      MM   ,M9    MM   d      MM     `Mb  ,V^MM.      //
-   //   MM""MM     MMmmMM      MMmmdM9     MMmmMM      MM      MM ,M  `MM      //
-   //   MM   Y     MM   Y  ,   MM  YM.     MM   Y  ,   MM     ,MP AbmmmqMA     //
-   //   MM         MM     ,M   MM   `Mb.   MM     ,M   MM    ,dP'A'     VML    //
-   // .JMML.     .JMMmmmmMMM .JMML. .JMM..JMMmmmmMMM .JMMmmmdP'.AMA.   .AMMA.  //
-   //                                                                          //  
-   //////////////////////////////////////////////////////////////////////////////
+PREVIEW_IMG = PREVIEW_IMG = '''\u001b[0m
+    -   -   -   -   -   -   -   -
+ ***********************************
+`*  ____ ____ ____ ____ ___  ____  *`
+`*  |___ |___ |__/ |___ |  \ |__|  *`
+`*  |    |___ |  \ |___ |__/ |  |  *`
+`*                                 *` 
+ """""""""""""""""""""""""""""""""""
+ \u001b[31m||| CREATED BY R3N3V4L TEAM |> v0.1\u001b[0m \n
 '''
 
 STDOUT = cs.deque()
@@ -373,7 +372,7 @@ def options_handler(**kwargs):
 
 def cli():
     DisplayInfo.show_info(DisplayInfo.preview_img.value)
-    DisplayInfo.show_info(DisplayInfo.author.value)
+    # DisplayInfo.show_info(DisplayInfo.author.value)
 
     start = time.time()
 
