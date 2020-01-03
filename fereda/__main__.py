@@ -21,7 +21,6 @@ from pprint import pprint
 
 
 # TODO: add release to github
-# TODO: replace default output dir to DCIM/Fereda
 
 
 PREVIEW_IMG = PREVIEW_IMG = '''\u001b[0m
