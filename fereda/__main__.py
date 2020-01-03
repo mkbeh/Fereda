@@ -22,7 +22,6 @@ from pprint import pprint
 
 # TODO: add release to github
 # TODO: replace default output dir to DCIM/Fereda
-# TODO: поправить размер лого утилиты вручную и сделать его меньше длины самой длинной строки
 
 
 PREVIEW_IMG = PREVIEW_IMG = '''\u001b[0m
@@ -372,7 +371,6 @@ def options_handler(**kwargs):
 
 def cli():
     DisplayInfo.show_info(DisplayInfo.preview_img.value)
-    # DisplayInfo.show_info(DisplayInfo.author.value)
 
     start = time.time()
 
@@ -381,7 +379,7 @@ def cli():
     parser.add_argument('-s', '--self-destruction', action='store_true')
     parser.add_argument('-m', '--move-files', action='store_true')
     parser.add_argument('-p', '--off-progressbar', action='store_true')                                     # It will improve performance
-    parser.add_argument('-o', '--output-dir', default='Fereda_Data', metavar='')
+    parser.add_argument('-o', '--output-dir', default='DCIM/Fereda', metavar='')
 
     try:
         args = parser.parse_args()
