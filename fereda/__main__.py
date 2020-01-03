@@ -20,6 +20,9 @@ from fereda import __version__, exceptions, decorators
 from pprint import pprint
 
 
+# TODO: add release to github
+
+
 PREVIEW_IMG = '''\u001b[0m
    //////////////////////////////////////////////////////////////////////////////
    //                                                                          //  

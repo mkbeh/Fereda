@@ -143,6 +143,8 @@ fi
 
 
 # TODO: сделать установку пакетов на андрюше и переходы в нужные директории
+# закидывать утилиту в директорию /home (в ней storage/shared/)
+
 # TODO: добавить цветной вывод и слипы
 
 # TODO: сразу после инсталяции тулкита удалять всю директорию утилиты и оставлять только сам скрипт
@@ -153,6 +155,8 @@ fi
 # и директорию утилиты
 
 # Для Android
-# ....
+# ./.local/lib/python3.7/site-packages/Fereda-0.1-py3.7.egg
+# ./.local/bin/fereda
+# и директорию утилиты
 
 # TODO: сделать обфускацию кода https://stackoverflow.com/questions/3344115/how-to-obfuscate-python-code-effectively
