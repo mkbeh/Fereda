@@ -21,11 +21,13 @@ Step 3:
 termux-setup-storage
 ```
 
-Copy `Fereda` utility to the victim's attacked phone into the `user directory (where locate DCIM PICTURES DOWNLOADS and etc` and run the following commands:
+Copy `Fereda` utility to the victim's attacked phone into the `user storage (where locate DCIM PICTURES DOWNLOADS and etc` and run the following commands:
 
 ```bash
 cd storage/shared/Fereda
 termux-fix-shebang install.sh
 chmod u+x install.sh
 bash install.sh
+
+# Then press `y` anywhere
 ```

@@ -3,6 +3,9 @@ set -e
 shopt -s extglob
 
 
+# TODO: разобраться как в termux устанавливать определенную версию питона
+
+
 declare -r BASHRC_LOC="$HOME/.bashrc"
 
 
@@ -67,7 +70,7 @@ function isPythonVersionSupport {
         fi
     done
 
-    printf "::> Installed Python %s not supported. Installing latest Python...\n" "$installedVersionNum"
+    installRequirements
 }
 
 
@@ -75,9 +78,11 @@ function installAndroidRequirements {
     echo "::> Installing requirements for $OPERATION_SYSTEM..."
 
     pkg update && pkg upgrade -y
-    pkg install python
-    pkg install sox                           # fixed python-magic
-    # pkg install libjpeg-turbo clang         # Fixed Pillow
+    pkg install python -y
+    pkg install sox -y                           # fixed python-magic
+    # pkg install libjpeg-turbo clang -y         # Fixed Pillow
+
+    INSTALLED_PYTHON_VERSION=$(python --version 2>&1 | tr "[:upper:]" "[:lower:]" | sed -e 's/ //' | cut -c1-7)
 }
 
 
@@ -94,13 +99,13 @@ function installRequirements {
 
 function isPythonInstalled {
     pythonVersions=(
-        "$(command -v python -V 2> /dev/null || echo Not Found)"
-        "$(command -v python3 -V 2> /dev/null || echo Not Found)"
+        "$(command python -V 2> /dev/null || echo Not Found)"
+        "$(command python3 -V 2> /dev/null || echo Not Found)"
     )
 
     for pythonVersion in "${pythonVersions[@]}"; do
         if [[ "$pythonVersion" =~ ^Python\ 3 ]]; then
-            INSTALLED_PYTHON_VERSION=$(echo "$pythonVersion" | tr "[:upper:]" "[:lower:]" | sed -e 's/ //; s/..$//')
+            INSTALLED_PYTHON_VERSION=$(echo "$pythonVersion" | tr "[:upper:]" "[:lower:]" | sed -e 's/ //' | cut -c1-7)
             break
         fi
     done
