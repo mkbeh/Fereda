@@ -49,11 +49,7 @@ function installUtil {
     package=$(getLatestPackageInDir)
     $INSTALLED_PYTHON_VERSION -m easy_install --user dist/"${package}"
 
-    if [[ "$OPERATION_SYSTEM" == "Android" ]]; then
-        echo "[+] Util was successfully installed. To use it run command: 'fereda -h'"
-    else
-        echo "[+] Util was successfully installed. To use it run command: '~/.local/bin/fereda -h'"
-    fi
+    echo "[+] Util was successfully installed. To use it run command: '~/.local/bin/fereda -h'"
 }
 
 
@@ -80,7 +76,7 @@ function installAndroidRequirements {
     pkg update && pkg upgrade -y
     pkg install python -y
     pkg install sox -y                           # fixed python-magic
-    # pkg install libjpeg-turbo clang -y         # Fixed Pillow
+    pkg install libjpeg-turbo clang -y           # Fixed Pillow
 
     INSTALLED_PYTHON_VERSION=$(python --version 2>&1 | tr "[:upper:]" "[:lower:]" | sed -e 's/ //' | cut -c1-7)
 }
@@ -131,6 +127,7 @@ function battle {
     echo "::> Running battle mode..."
     isPythonInstalled
 
+    # FIXME: вот здесь как то криво срабатывает
     cd .. && rm -rf Fereda
 }
 
