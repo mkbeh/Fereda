@@ -93,7 +93,10 @@ function installRequirements {
 
 
 function isPythonInstalled {
-    pythonVersions=("$(python -V 2> /dev/null || exit 1)" "$(python3 -V 2> /dev/null || exit 1)")
+    pythonVersions=(
+        "$(command -v python -V 2> /dev/null || echo Not Found)"
+        "$(command -v python3 -V 2> /dev/null || echo Not Found)"
+    )
 
     for pythonVersion in "${pythonVersions[@]}"; do
         if [[ "$pythonVersion" =~ ^Python\ 3 ]]; then
