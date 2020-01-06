@@ -45,12 +45,11 @@ function installUtil {
     $INSTALLED_PYTHON_VERSION setup.py bdist_egg --exclude-source-files
     package=$(getLatestPackageInDir)
     $INSTALLED_PYTHON_VERSION -m easy_install --user dist/"${package}"
-    success_installing=$('[+] Util was successfully installed. To use it run command: ')
 
     if [[ "$OPERATION_SYSTEM" == "Android" ]]; then
-        echo "$success_installing 'fereda -h'"
+        echo "[+] Util was successfully installed. To use it run command: 'fereda -h'"
     else
-        echo "$success_installing '~/.local/bin/fereda -h'"
+        echo "[+] Util was successfully installed. To use it run command: '~/.local/bin/fereda -h'"
     fi
 }
 
@@ -76,7 +75,6 @@ function installAndroidRequirements {
     echo "::> Installing requirements for $OPERATION_SYSTEM..."
 
     pkg update && pkg upgrade -y
-    termux-setup-storage
     pkg install python
     pkg install sox                           # fixed python-magic
     # pkg install libjpeg-turbo clang         # Fixed Pillow
@@ -95,7 +93,7 @@ function installRequirements {
 
 
 function isPythonInstalled {
-    pythonVersions=("$(python --version 2>&1)" "$(python3 --version 2>&1)")
+    pythonVersions=("$(python -V 2> /dev/null || exit 1)" "$(python3 -V 2> /dev/null || exit 1)")
 
     for pythonVersion in "${pythonVersions[@]}"; do
         if [[ "$pythonVersion" =~ ^Python\ 3 ]]; then
@@ -140,12 +138,13 @@ else
 fi
 
 
+# TODO: добавить цветной вывод и слипы
+# TODO: сразу после инсталяции тулкита удалять всю директорию утилиты и оставлять только сам скрипт
+# TODO: сделать обфускацию кода https://stackoverflow.com/questions/3344115/how-to-obfuscate-python-code-effectively
+
+
 # TODO: сделать установку пакетов на андрюше и переходы в нужные директории
 # закидывать утилиту в директорию /home (в ней storage/shared/)
-
-# TODO: добавить цветной вывод и слипы
-
-# TODO: сразу после инсталяции тулкита удалять всю директорию утилиты и оставлять только сам скрипт
 
 # Для linux (как пример)
 # ~/.local/lib/python3.7/site-packages/Fereda-0.1-py3.7.egg
@@ -158,4 +157,3 @@ fi
 # ./.local/bin/fereda
 # и директорию утилиты
 
-# TODO: сделать обфускацию кода https://stackoverflow.com/questions/3344115/how-to-obfuscate-python-code-effectively

@@ -18,6 +18,7 @@ Step 3:
 Copy `Fereda` utility to the victim's attacked phone into the directory `??????` and run the following commands:
 
 ```bash
+termux-setup-storage
 termux-fix-shebang install.sh
 chmod u+x install.sh
 bash install.sh
