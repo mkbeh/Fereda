@@ -234,13 +234,21 @@ class ImagesSearcher(ImagesRestore, Image):
             'Download'
         )
 
-        self._images_from_default_dirs = self._get_images_from_default_dirs()
+        self._images_from_default_dirs = tuple(self._get_images_from_default_dirs())
 
     def __call__(self):
         DisplayInfo.show_info(DisplayInfo.images_searcher.value)
         self.search_files_handler()
 
     def _get_images_from_default_dirs(self):
+        """
+        NOTE: судя по всему здесь кроется потенциальный баг , который заключается в возврате генератора
+        и к примеру когда есть найденные файлы в телеграм и в галерее , то телеграм картинки 
+        восстанавливаются вроде корректно , а в галерее нет (утилита не видит файлы , которые уже есть 
+        в галерее , скорее всего из за того , что генератор пустой)
+
+        UPD1: 
+        """
         return it.chain(
             *(
                 self._set_info_to_images(self._dirs_walker(default_images_dir))
@@ -347,6 +355,10 @@ class ImagesSearcher(ImagesRestore, Image):
         )
 
         data_to_restore = cs.ChainMap(*data_to_restore)
+
+        # pprint(data_to_restore)
+        # import sys
+        # sys.exit(0)
 
         if not data_to_restore:
             raise exceptions.NoDataToRestore()

@@ -128,7 +128,7 @@ function battle {
     isPythonInstalled
 
     # FIXME: вот здесь как то криво срабатывает
-    cd .. && rm -rf Fereda
+    # cd .. && rm -rf Fereda
 }
 
 
