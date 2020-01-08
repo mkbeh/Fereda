@@ -11,14 +11,17 @@ import collections as cs
 import functools
 
 import magic
+import PIL
+import imagehash
 
 from dataclasses import dataclass
 from hashlib import md5
 
 from fereda import __version__, exceptions, decorators
 
-from pprint import pprint
 
+# TODO: чекнуть будет ли как то влиять на память то , что вычисляется средний хэш и файловый дескриптор изображения
+# не закрывается вручную (метод чека удалено ли изображение)
 
 # TODO: add release to github
 
@@ -87,10 +90,11 @@ class DisplayInfo(enum.Enum):
 
     # Exceptions messages.
     no_data_to_restore      =   f'{templates.get("exception")} No data to restore. Removed or hide images not found.'
-    incorrect_start_dir     =   f'{templates.get("exception")} Incorrect start directory, change current directory to user directory.\n'
+    incorrect_start_dir     =   f'{templates.get("exception")} Incorrect start directory, change current' \
+                                'directory to user directory.' + colors.get('reset') + '\n'
 
     @staticmethod
-    def show_info(info=None, include_found_data_info=False):
+    def show_info(info=None):
         os.system('clear')
 
         if info:
@@ -181,11 +185,12 @@ class ImagesRestore():
 
 @dataclass()
 class Image:
-    __slots__ = ('path', 'type', 'hash')
+    __slots__ = ('path', 'type', 'hash', 'avr_hash')
     
-    path: str
-    type: str
-    hash: str
+    path        : str
+    type        : str
+    hash        : str
+    avr_hash    : imagehash.average_hash
 
     def _get_file_hash(self):
         with open(self.path, 'rb') as f:
@@ -231,37 +236,45 @@ class ImagesSearcher(ImagesRestore, Image):
         self._default_device_images_dirs = (
             'DCIM',
             'Pictures',
-            'Download'
+            'Download',
+            'Avito'
         )
 
-        self._images_from_default_dirs = tuple(self._get_images_from_default_dirs())
+        self._images_from_default_dirs = self._get_images_from_default_dirs()
 
     def __call__(self):
         DisplayInfo.show_info(DisplayInfo.images_searcher.value)
         self.search_files_handler()
 
     def _get_images_from_default_dirs(self):
-        """
-        NOTE: судя по всему здесь кроется потенциальный баг , который заключается в возврате генератора
-        и к примеру когда есть найденные файлы в телеграм и в галерее , то телеграм картинки 
-        восстанавливаются вроде корректно , а в галерее нет (утилита не видит файлы , которые уже есть 
-        в галерее , скорее всего из за того , что генератор пустой)
 
-        UPD1: 
-        """
-        return it.chain(
+        def set_average_hash_info(img):
+            img.avr_hash = imagehash.average_hash(PIL.Image.open(img.path))
+            return img
+
+        images = it.chain(
             *(
                 self._set_info_to_images(self._dirs_walker(default_images_dir))
                 for default_images_dir in self._default_device_images_dirs
             )
         )
 
+        return (
+            set_average_hash_info(image) for image in images
+        )
+
     @decorators.progressbar(STDOUT, OFF_PROGRESSBAR_FLAG)
     def _is_image_removed(self, image):
         self._images_from_default_dirs, images_from_default_dirs_cp = it.tee(self._images_from_default_dirs, 2)
-        results = (image == image_from_default_dir for image_from_default_dir in images_from_default_dirs_cp)
 
-        return False if True in results else True
+        cutoff = 5
+        image_average_hash = imagehash.average_hash(PIL.Image.open(image.path))
+
+        for image_from_default_dir in images_from_default_dirs_cp:
+            if image_average_hash - image_from_default_dir.avr_hash < cutoff:       # images are similar / not removed
+                return False
+        
+        return True
 
     def _delete_non_removed_images(self, images):
         return tuple(
@@ -287,7 +300,7 @@ class ImagesSearcher(ImagesRestore, Image):
 
             if file_type.startswith('image'):
                 found_images.append(
-                    Image(path=file, type=file_type.split('/')[-1], hash='')
+                    Image(path=file, type=file_type.split('/')[-1], hash='', avr_hash=None)
                 )
 
         return found_images
@@ -356,10 +369,6 @@ class ImagesSearcher(ImagesRestore, Image):
 
         data_to_restore = cs.ChainMap(*data_to_restore)
 
-        # pprint(data_to_restore)
-        # import sys
-        # sys.exit(0)
-
         if not data_to_restore:
             raise exceptions.NoDataToRestore()
         
@@ -409,6 +418,7 @@ def cli():
 if __name__ == "__main__":
     try:
         cli()
+    # FIXME: not catch this exception and output error msg
     except FileNotFoundError:
         DisplayInfo.show_info(DisplayInfo.incorrect_start_dir.value)
  
