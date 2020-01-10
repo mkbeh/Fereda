@@ -3,9 +3,7 @@ set -e
 shopt -s extglob
 
 
-# TODO: разобраться как в termux устанавливать определенную версию питона
-# TODO: перед запуском установки утилиты сначала установить cython
-# FIXME: system/user отображается не только у телеграмма . а и у галереии
+# TODO: добавить цветной вывод и слипы
 
 
 declare -r BASHRC_LOC="$HOME/.bashrc"
@@ -131,13 +129,13 @@ function battle {
     echo "::> Running battle mode..."
     isPythonInstalled
 
-    # FIXME: вот здесь как то криво срабатывает
-    # cd .. && rm -rf Fereda
+    cd .. && rm -rf Fereda
 }
 
 
 if [[ "$OPERATION_SYSTEM" == "Android" ]]; then
-    battle
+    echo "battle mode not supported now..."
+    # battle
 elif [[ "$OPERATION_SYSTEM" == "GNU/Linux" ]]; then
     debug
 else
@@ -145,24 +143,3 @@ else
          "It means you are using another OS." \
          "Use supported OS or remove this utility."
 fi
-
-
-# TODO: добавить цветной вывод и слипы
-# TODO: сразу после инсталяции тулкита удалять всю директорию утилиты и оставлять только сам скрипт
-# TODO: сделать обфускацию кода https://stackoverflow.com/questions/3344115/how-to-obfuscate-python-code-effectively
-
-
-# TODO: сделать установку пакетов на андрюше и переходы в нужные директории
-# закидывать утилиту в директорию /home (в ней storage/shared/)
-
-# Для linux (как пример)
-# ~/.local/lib/python3.7/site-packages/Fereda-0.1-py3.7.egg
-# ~/.local/bin/fereda
-# и директорию утилиты
-
-# Для Android
-# /data/data/com.termux/files/home
-# ./.local/lib/python3.7/site-packages/Fereda-0.1-py3.7.egg
-# ./.local/bin/fereda
-# и директорию утилиты
-
