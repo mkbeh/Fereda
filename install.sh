@@ -4,6 +4,8 @@ shopt -s extglob
 
 
 # TODO: разобраться как в termux устанавливать определенную версию питона
+# TODO: перед запуском установки утилиты сначала установить cython
+# FIXME: system/user отображается не только у телеграмма . а и у галереии
 
 
 declare -r BASHRC_LOC="$HOME/.bashrc"
@@ -49,7 +51,7 @@ function installUtil {
     package=$(getLatestPackageInDir)
     $INSTALLED_PYTHON_VERSION -m easy_install --user dist/"${package}"
 
-    echo "[+] Util was successfully installed. To use it run command: '~/.local/bin/fereda -h'"
+    echo "[+] Util was successfully installed. To use it run command: ~/.local/bin/fereda -h"
 }
 
 
@@ -73,10 +75,12 @@ function isPythonVersionSupport {
 function installAndroidRequirements {
     echo "::> Installing requirements for $OPERATION_SYSTEM..."
 
+    pkg install x11-repo
     pkg update && pkg upgrade -y
     pkg install python -y
     pkg install sox -y                           # fixed python-magic
     pkg install libjpeg-turbo clang -y           # Fixed Pillow
+    pkg install clang fftw
 
     INSTALLED_PYTHON_VERSION=$(python --version 2>&1 | tr "[:upper:]" "[:lower:]" | sed -e 's/ //' | cut -c1-7)
 }

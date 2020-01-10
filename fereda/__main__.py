@@ -355,8 +355,10 @@ class ImagesSearcher(ImagesRestore, Image):
 
         if dir_name in system_messengers_names:
             return dir_name.capitalize() + ' (System)'
-
-        return dir_name + ' (User)'
+        elif dir_name in user_messengers_names:
+            return dir_name + ' (User)'
+        else:
+            return dir_name
 
     def search_files_handler(self):
         data_to_restore = filter(
