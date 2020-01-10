@@ -20,12 +20,6 @@ from hashlib import md5
 from fereda import __version__, exceptions, decorators
 
 
-# TODO: чекнуть будет ли как то влиять на память то , что вычисляется средний хэш и файловый дескриптор изображения
-# не закрывается вручную (метод чека удалено ли изображение)
-
-# TODO: add release to github
-
-
 PREVIEW_IMG = PREVIEW_IMG = '''\u001b[0m
     -   -   -   -   -   -   -   -
  ***********************************
@@ -42,11 +36,16 @@ OFF_PROGRESSBAR_FLAG = []
 
 
 class SelfDestruction():
-    # TODO: Написать удаление программы именно с телефона с компа не надо.
     _operation_system = subprocess.check_output(['uname', '-o']).decode('utf-8')
     
     def destruction(self):
-        pass
+        file_bin = '~/.local/bin/fereda'
+        egg = f'~/.local/lib/python3.7/site-packages/Fereda-{__version__}-py3.7.egg'
+
+        if os.path.isfile(file_bin) and os.path.isfile(egg):
+            os.remove(file_bin)
+            os.remove(egg)
+
 
     def destruction_handler(self):
         if self._operation_system != 'GNU/Linux':
@@ -89,7 +88,7 @@ class DisplayInfo(enum.Enum):
 
     # Exceptions messages.
     no_data_to_restore      =   f'{templates.get("exception")} No data to restore. Removed or hide images not found.'
-    incorrect_start_dir     =   f'{templates.get("exception")} Incorrect start directory, change current' \
+    incorrect_start_dir     =   f'{templates.get("exception")} Incorrect start directory, change current ' \
                                 'directory to user directory.' + colors.get('reset') + '\n'
 
     @staticmethod
@@ -419,7 +418,6 @@ def cli():
 if __name__ == "__main__":
     try:
         cli()
-    # FIXME: not catch this exception and output error msg
     except FileNotFoundError:
         DisplayInfo.show_info(DisplayInfo.incorrect_start_dir.value)
  
