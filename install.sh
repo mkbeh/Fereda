@@ -77,7 +77,7 @@ function installUtil {
         $INSTALLED_PYTHON_VERSION -m easy_install --user dist/"${package}"
     fi
 
-    printf "\e[1;32m[+] Util was successfully installed. To use it run command: ~/.local/bin/fereda -h\n\e[0m" && sleep 1s
+    printf "\e[1;32m[+] Utility was successfully installed. To use it run command: ~/.local/bin/fereda -h\n\e[0m" && sleep 1s
 }
 
 
