@@ -34,7 +34,7 @@ PREVIEW_IMG = PREVIEW_IMG = '''\u001b[0m
 `*  |    |___ |  \ |___ |__/ |  |  *`
 `*                                 *` 
  """""""""""""""""""""""""""""""""""
- \u001b[31m||| CREATED BY R3N3V4L TEAM |> v{}\u001b[0m \n
+ \u001b[31m||| CREATED BY EXp0s3R3b_RTH SQUAD |> v{}\u001b[0m \n
 '''.format(__version__)
 
 STDOUT = cs.deque()
@@ -76,7 +76,6 @@ class DisplayInfo(enum.Enum):
 
     # Info messages.
     preview_img             =   f'{PREVIEW_IMG}'
-    author                  =   f'{colors.get("red")}\t\t\t   ||| CREATED BY R3N3V4L TEAM |> v{__version__}\n{colors.get("reset")}'
     start                   =   f'{templates.get("arrow")} Utility started...'
     images_searcher         =   f'{templates.get("arrow")} Running searcher of removed and hidden images...'
     remove_duplicates       =   f'{templates.get("arrow")} Removing duplicates of found images...'
