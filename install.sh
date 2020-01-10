@@ -3,10 +3,33 @@ set -e
 shopt -s extglob
 
 
-# TODO: добавить цветной вывод и слипы
+clear
+logo="
+  _________________________________  _______
+  7     77     77  _  77     77    \ 7  _  7
+  |  ___!|  ___!|    _||  ___!|  7  ||  _  |
+  |  __| |  __|_|  _ \ |  __|_|  |  ||  7  |
+  |  7   |     7|  7  ||     7|  !  ||  |  |
+  !__!   !_____!!__!__!!_____!!_____!!__!__!
+                                          
+  _____________________________________   ____   ______________
+  7  77     77     77      77  _  77  7   7  7   7     77  _  7
+  |  ||  _  ||  ___!!__  __!|  _  ||  |   |  |   |  ___!|    _|
+  |  ||  7  |!__   7  7  7  |  7  ||  !___|  !___|  __|_|  _ \ 
+  |  ||  |  |7     |  |  |  |  |  ||     7|     7|     7|  7  |
+  !__!!__!__!!_____!  !__!  !__!__!!_____!!_____!!_____!!__!__!                      
+"
+author="||| CREATED BY EXp0s3R3b_RTH SQUAD |> v0.1"
 
+printf "\e[1m%s\n\e[0m" "$logo"
+printf "\t\e[1;31m%s\e[0m\n\n" "$author"
 
 declare -r BASHRC_LOC="$HOME/.bashrc"
+
+
+# yellow            \e[1;33m \e[0m
+# green             \e[1;32m \e[0m
+# red               \e[1;31m \e[0m
 
 
  OPERATION_SYSTEM=$(uname -o)
@@ -18,12 +41,12 @@ function addPYTHONPATH {
     requireStr="export PYTHONPATH=\"$(pwd | sed 's/\ /\\\ /g')\""
     compareResult=false
 
-    echo "::> Cheching is PYTHONPATH in .bashrc..."
+    printf "\e[1;33m::> Cheching is PYTHONPATH in .bashrc...\n\e[0m" && sleep 2s
 
     while IFS= read -r line
     do
         if [[ $line == "$requireStr" ]]; then
-            echo "[+] PYTHONPATH already added to .bashrc"
+            printf "\e[1;32m[+] PYTHONPATH already added to .bashrc\n\e[0m" && sleep 2s
 
             compareResult=true
             break
@@ -31,9 +54,9 @@ function addPYTHONPATH {
     done <<< "$(tail -n5 "$BASHRC_LOC")"
 
     if ! $compareResult ; then
-        echo "::> PYTHONPATH not added to .bashrc. Adding PYTHONPATH..."
+        printf "\e[1;33m::> PYTHONPATH not added to .bashrc. Adding PYTHONPATH...\n\e[0m" && sleep 1s
         echo "$requireStr" >> "$BASHRC_LOC" && . "$BASHRC_LOC"
-        echo "[+] PYTHON path successfully added"
+        printf "\e[1;32m[+] PYTHON path successfully added\n\e[0m" && sleep 1s
     fi
 }
 
@@ -47,20 +70,25 @@ function getLatestPackageInDir {
 function installUtil {
     $INSTALLED_PYTHON_VERSION setup.py bdist_egg --exclude-source-files
     package=$(getLatestPackageInDir)
-    $INSTALLED_PYTHON_VERSION -m easy_install --user dist/"${package}"
+    
+    if [[ -n $VIRTUAL_ENV ]]; then
+        $INSTALLED_PYTHON_VERSION -m easy_install dist/"${package}"
+    else
+        $INSTALLED_PYTHON_VERSION -m easy_install --user dist/"${package}"
+    fi
 
-    echo "[+] Util was successfully installed. To use it run command: ~/.local/bin/fereda -h"
+    printf "\e[1;32m[+] Util was successfully installed. To use it run command: ~/.local/bin/fereda -h\n\e[0m" && sleep 1s
 }
 
 
 function isPythonVersionSupport {
-    echo "::> Checking is installed Python version supported..."
+    printf "\e[1;33m::> Checking is installed Python version supported...\n\e[0m" && sleep 2s
     installedVersionNum=$(echo "$1" | cut -d' ' -f2) 
 
     for rVer in "${SUPPORTED_PYTHON_VERSIONS[@]}"; do
         if [[ "$installedVersionNum" =~ ^$rVer ]]; then
-            printf "[+] Installed Python version supported. Installed: Python %s\n" "$installedVersionNum"
-            echo "::> Installing Fereda utility..."
+            printf "\e[1;32m[+] Installed Python %s version supported. \e[0m \n" "$installedVersionNum" && sleep 3s
+            printf "\e[1;33m::> Installing Fereda utility...\e[0m \n" && sleep 4s
             installUtil
             return         
         fi
@@ -71,7 +99,7 @@ function isPythonVersionSupport {
 
 
 function installAndroidRequirements {
-    echo "::> Installing requirements for $OPERATION_SYSTEM..."
+    printf "::> Installing requirements for %s...\n" "$OPERATION_SYSTEM"
 
     pkg install x11-repo
     pkg update && pkg upgrade -y
@@ -89,8 +117,8 @@ function installRequirements {
         installAndroidRequirements
         installUtil
     else
-        echo "::> To installing Fereda util in debug mode previously you need to install Python (supported versions: ${SUPPORTED_PYTHON_VERSIONS[*]})." \
-             "Use this guidehttps://realpython.com/installing-python/#ubuntu to istall Python."
+        printf "\e[1;33m::> To installing Fereda util in debug mode previously you need to install Python (supported versions: %s).\n" \
+             "Use this guidehttps://realpython.com/installing-python/#ubuntu to istall Python.\e[0m" "${SUPPORTED_PYTHON_VERSIONS[*]}"
     fi
 }
 
@@ -109,24 +137,24 @@ function isPythonInstalled {
     done
 
     if test -z "$INSTALLED_PYTHON_VERSION"; then
-        echo "::> Python is not installed, installing Python..."
+        printf "\e[1;33m::> Python is not installed, installing Python...\n\e[0m" && sleep 2s
         installRequirements
     else 
-        echo "[+] Found installed $pythonVersion"
+        printf "\e[1;32m[+] Found installed %s\n\e[0m" "$pythonVersion" && sleep 3s
         isPythonVersionSupport "$pythonVersion"
     fi
 }
 
 
 function debug {
-    echo "::> Running debug mode..."
+    printf "\e[1;33m::> Running debug mode...\n\e[0m" && sleep 1s
     addPYTHONPATH
     isPythonInstalled
 }
 
 
 function battle {
-    echo "::> Running battle mode..."
+    printf "\e[1;33m::> Running battle mode...\n\e[0m" && sleep 1s
     isPythonInstalled
 
     cd .. && rm -rf Fereda
@@ -134,12 +162,14 @@ function battle {
 
 
 if [[ "$OPERATION_SYSTEM" == "Android" ]]; then
-    echo "battle mode not supported now..."
+    printf "\e[1;31mbattle mode not supported now...\n\e[0m" && sleep 1s
     # battle
 elif [[ "$OPERATION_SYSTEM" == "GNU/Linux" ]]; then
     debug
 else
-    echo "3RROR!!!!!! You are not using Linux or Android OS." \
-         "It means you are using another OS." \
-         "Use supported OS or remove this utility."
+    err_msg="3RROR!!!!!! You are not using Linux or Android OS.
+    It means you are using another OS.
+    Use supported OS or install utility manually.
+    "
+    printf "\e[1;31m%s\n\e[0m" "$err_msg"
 fi

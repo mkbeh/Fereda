@@ -20,15 +20,15 @@ from hashlib import md5
 from fereda import __version__, exceptions, decorators
 
 
-PREVIEW_IMG = PREVIEW_IMG = '''\u001b[0m
-    -   -   -   -   -   -   -   -
- ***********************************
-`*  ____ ____ ____ ____ ___  ____  *`
-`*  |___ |___ |__/ |___ |  \ |__|  *`
-`*  |    |___ |  \ |___ |__/ |  |  *`
-`*                                 *` 
- """""""""""""""""""""""""""""""""""
- \u001b[31m||| CREATED BY EXp0s3R3b_RTH SQUAD |> v{}\u001b[0m \n
+PREVIEW_IMG = PREVIEW_IMG = '''\u001b[0m \033[1m
+  _________________________________  _______
+  7     77     77  _  77     77    \ 7  _  7
+  |  ___!|  ___!|    _||  ___!|  7  ||  _  |
+  |  __| |  __|_|  _ \ |  __|_|  |  ||  7  |
+  |  7   |     7|  7  ||     7|  !  ||  |  |
+  !__!   !_____!!__!__!!_____!!_____!!__!__!
+
+  \u001b[31m||| CREATED BY EXp0s3R3b_RTH SQUAD |> v{}\u001b[0m \n
 '''.format(__version__)
 
 STDOUT = cs.deque()
@@ -89,7 +89,7 @@ class DisplayInfo(enum.Enum):
     # Exceptions messages.
     no_data_to_restore      =   f'{templates.get("exception")} No data to restore. Removed or hide images not found.'
     incorrect_start_dir     =   f'{templates.get("exception")} Incorrect start directory, change current ' \
-                                'directory to user directory.' + colors.get('reset') + '\n'
+                                'directory to Android user directory.' + colors.get('reset') + '\n'
 
     @staticmethod
     def show_info(info=None):
