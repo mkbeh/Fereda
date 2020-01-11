@@ -266,7 +266,11 @@ class ImagesSearcher(ImagesRestore, Image):
         self._images_from_default_dirs, images_from_default_dirs_cp = it.tee(self._images_from_default_dirs, 2)
 
         cutoff = 5
-        image_average_hash = imagehash.average_hash(PIL.Image.open(image.path))
+
+        try:
+            image_average_hash = imagehash.average_hash(PIL.Image.open(image.path))
+        except OSError:
+            return False
 
         for image_from_default_dir in images_from_default_dirs_cp:
             if image_average_hash - image_from_default_dir.avr_hash < cutoff:       # images are similar / not removed
