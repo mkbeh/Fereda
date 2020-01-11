@@ -48,7 +48,7 @@ class SelfDestruction():
 
 
     def destruction_handler(self):
-        if self._operation_system != 'GNU/Linux':
+        if self._operation_system == 'GNU/Linux':
             self.destruction()
             DisplayInfo.show_info(DisplayInfo.self_destruction_ok.value)
 
