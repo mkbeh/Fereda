@@ -235,7 +235,9 @@ class ImagesSearcher(ImagesRestore, Image):
             'DCIM',
             'Pictures',
             'Download',
-            'Avito'
+            'Avito',
+
+            kwargs['output_dir']
         )
 
         self._images_from_default_dirs = self._get_images_from_default_dirs()
