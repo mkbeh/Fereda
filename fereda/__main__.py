@@ -45,12 +45,15 @@ class SelfDestruction():
         if os.path.isfile(file_bin) and os.path.isfile(egg):
             os.remove(file_bin)
             os.remove(egg)
+            DisplayInfo.show_info(DisplayInfo.self_destruction_ok.value)
 
 
     def destruction_handler(self):
+        if self._operation_system != 'GNU/Linux':
+            return
+
         if self._operation_system == 'GNU/Linux':
             self.destruction()
-            DisplayInfo.show_info(DisplayInfo.self_destruction_ok.value)
 
 
 class DisplayInfo(enum.Enum):
