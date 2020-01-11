@@ -403,7 +403,7 @@ def cli():
     parser.add_argument('-s', '--self-destruction', action='store_true')
     parser.add_argument('-m', '--move-files', action='store_true')
     parser.add_argument('-p', '--off-progressbar', action='store_true')                                     # It will improve performance
-    parser.add_argument('-o', '--output-dir', default='DCIM/Fereda', metavar='')
+    parser.add_argument('-o', '--output-dir', default='Fereda', metavar='')
 
     try:
         args = parser.parse_args()
