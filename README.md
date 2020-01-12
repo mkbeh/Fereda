@@ -15,7 +15,7 @@ Cyber security tool of mobile forensics for restoring hide and removed images fr
 ```lang
 Methods of the donation to the development of the project:
 
-BTC: bc1qwcp93tr7t7rlwe86zpglusstaq8j50dag0q6ll
+Bitcoin: bc1qwcp93tr7t7rlwe86zpglusstaq8j50dag0q6ll
 ```
 
 **`Supporting devices`**:
