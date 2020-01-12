@@ -10,10 +10,19 @@
 ![Version](https://img.shields.io/badge/Version-v0.1-YELLOW)
 ![License](https://img.shields.io/badge/License-GPLv3.0-BRIGHTGREEN)
 
+[![Discord](https://img.shields.io/discord/665846988423692289)](https://discord.gg/zPxXhr)
 
-![Discord Banner 1](https://discordapp.com/api/guilds/665846988423692289/widget.png?style=banner1)
+
+
+<!-- ![Discord Banner 1](https://discordapp.com/api/guilds/665846988423692289/widget.png?style=banner1)
 
 ![Discord](https://img.shields.io/discord/665846988423692289)
+
+<p align="center">
+    <a href="https://discord.gg/HjJCwm5">
+        <img src="https://img.shields.io/discord/308323056592486420?logo=discord"
+            alt="chat on Discord"></a>
+</p> -->
 
 Cyber security tool for restoring hide and removed images from gallery and messengers on Android.
 
