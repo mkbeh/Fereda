@@ -1,6 +1,7 @@
 # Fereda
 
 [TO DO add badge issues]
+
 [TO DO add badge release]
 
 ![Platform](https://img.shields.io/badge/Platform-all-RED)
