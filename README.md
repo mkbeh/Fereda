@@ -52,7 +52,29 @@ The list of supported devices means that the utility has been tested on these de
 
 [TO DO youtube screen cast]
 
-[TO DO options desctiption]
+### **Options**
+
+* --restore-data - Will copy found files into output directory. Without this option, it will simply show how many files were found and in what places.
+* --self-destruction - Will remove utility from path ~/.local/bin&&lib. Works only on Linux.
+* --move-files - Will move found files from its places into output directory. Works with option `--restore-data`.
+* --off-progress-bar - It will improve performance.
+* --output-dir - Directory where will be copied or moved found files. By default it named `Fereda` and it will be located in the same directory where the utility was launched.
+
+### **Exmaples**
+
+```bash
+# ---- Show help message ----
+fereda -h
+
+# ---- Simple run. Only shows how many files were found and in what places ----
+fereda
+
+# ---- Restore (copy) found files to output directory ----
+fereda -r
+
+# ---- Restore (move) found files to output directory ----
+fereda -rm
+```
 
 ## Roadmap
 
