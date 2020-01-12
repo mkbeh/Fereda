@@ -19,7 +19,6 @@
 # Copyright (c) 2020 January mkbeh
 
 
-
 import os
 import time
 import enum
