@@ -20,13 +20,16 @@ Donate to the development of the project:
 BTC: ??????
 ```
 
-`Supporting devices`:
+**`Supporting devices`**:
 
-[TO DO]
+* Samsung Note 8
+* RedmiGo 7A
+* Micromax
 
-`Supporting messengers`:
+**`Supporting messengers`**:
 
-[TO DO]
+* Telegram
+* VK (added , but not tested yet)
 
 ```lang
 NOTE:
@@ -35,7 +38,15 @@ The list of supported devices means that the utility has been tested on these de
 
 ## Installation
 
-[TO DO]
+> git clone https://github.com/mkbeh/Fereda.git && cd Fereda
+
+### **Linux**
+
+> chmod u+x install.sh && ./install.sh
+
+### **Other OS**
+
+> python3.7 setup.py install
 
 ## Usage
 
