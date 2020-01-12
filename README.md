@@ -2,15 +2,15 @@
 
 [TO DO Badges]
 
-[TO DO add discord chat and its badge]
-[TO DO add issues badge]
+[TO DO add badge issues]
+[TO DO add badge release]
 
 ![Platform](https://img.shields.io/badge/Platform-all-GREEN)
 ![Python](https://img.shields.io/badge/Python-3.7|3.8-BLUE)
 ![Version](https://img.shields.io/badge/Version-v0.1-YELLOW)
 ![License](https://img.shields.io/badge/License-GPLv3.0-BRIGHTGREEN)
 
-[![Discord](https://img.shields.io/discord/665846988423692289)](https://discord.gg/zPxXhr)
+[![Discord](https://user-images.githubusercontent.com/7288322/34429117-c74dbd12-ecb8-11e7-896d-46369cd0de5b.png)](https://discord.gg/zPxXhr)
 
 
 
