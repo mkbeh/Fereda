@@ -3,10 +3,10 @@
 [TO DO add badge issues]
 [TO DO add badge release]
 
-![Platform](https://img.shields.io/badge/Platform-all-GREEN)
+![Platform](https://img.shields.io/badge/Platform-all-RED)
 ![Python](https://img.shields.io/badge/Python-3.7|3.8-BLUE)
-![Version](https://img.shields.io/badge/Version-v0.1-YELLOW)
-![License](https://img.shields.io/badge/License-GPLv3.0-BRIGHTGREEN)
+![Version](https://img.shields.io/badge/Version-v0.1-BRIGHTGREEN)
+![License](https://img.shields.io/badge/License-GPLv3.0-Yellow)
 
 [![Discord](https://user-images.githubusercontent.com/7288322/34429117-c74dbd12-ecb8-11e7-896d-46369cd0de5b.png)](https://discord.gg/zPxXhr)
 
