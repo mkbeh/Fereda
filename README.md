@@ -12,19 +12,7 @@
 
 [![Discord](https://user-images.githubusercontent.com/7288322/34429117-c74dbd12-ecb8-11e7-896d-46369cd0de5b.png)](https://discord.gg/zPxXhr)
 
-
-
-<!-- ![Discord Banner 1](https://discordapp.com/api/guilds/665846988423692289/widget.png?style=banner1)
-
-![Discord](https://img.shields.io/discord/665846988423692289)
-
-<p align="center">
-    <a href="https://discord.gg/HjJCwm5">
-        <img src="https://img.shields.io/discord/308323056592486420?logo=discord"
-            alt="chat on Discord"></a>
-</p> -->
-
-Cyber security tool for restoring hide and removed images from gallery and messengers on Android.
+Cyber security tool of mobile forensics for restoring hide and removed images from gallery and different messengers on Android.
 
 ```lang
 Donate to the development of the project:
