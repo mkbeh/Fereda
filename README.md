@@ -15,7 +15,7 @@
 Cyber security tool of mobile forensics for restoring hide and removed images from gallery and different messengers on Android.
 
 ```lang
-Donate to the development of the project:
+Methods of the donation to the development of the project:
 
 BTC: ??????
 ```
