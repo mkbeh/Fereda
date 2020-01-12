@@ -88,7 +88,7 @@ fereda
 # ---- Restore (copy) found files to output directory ----
 fereda -r
 
-# ---- Restore (move) found files to output directory ----
+# ---- Restore (move) found files from its location to output directory ----
 fereda -rm
 ```
 
