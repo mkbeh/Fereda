@@ -1,7 +1,5 @@
 # Fereda
 
-[TO DO Badges]
-
 [TO DO add badge issues]
 [TO DO add badge release]
 
@@ -17,7 +15,7 @@ Cyber security tool of mobile forensics for restoring hide and removed images fr
 ```lang
 Methods of the donation to the development of the project:
 
-BTC: ??????
+BTC: bc1qwcp93tr7t7rlwe86zpglusstaq8j50dag0q6ll
 ```
 
 **`Supporting devices`**:
@@ -60,7 +58,25 @@ The list of supported devices means that the utility has been tested on these de
 * --off-progress-bar - It will improve performance.
 * --output-dir - Directory where will be copied or moved found files. By default it named `Fereda` and it will be located in the same directory where the utility was launched.
 
-### **Exmaples**
+### **Examples**
+
+**`First step`**
+
+```bash
+# ---- Plug in your phone via usb,
+# ---- Enable USB debugging in Developer Settings
+# ---- Install ADB (Android Debug Bridge)
+# ---- Run following commands:
+adb devices
+adb pull /path/to/user/folder .
+
+# Next, go to the second step.
+
+IMPORTANT NOTE:
+User folder contains directories such as DCIM Pictures and etc.
+```
+
+**`Second step`**
 
 ```bash
 # ---- Show help message ----
