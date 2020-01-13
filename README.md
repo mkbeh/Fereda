@@ -5,8 +5,9 @@
 [TO DO add badge release]
 
 ![Platform](https://img.shields.io/badge/Platform-all-RED)
-![Python](https://img.shields.io/badge/Python-3.7|3.8-BLUE)
-![Version](https://img.shields.io/badge/Version-v0.1-BRIGHTGREEN)
+![Python](https://img.shields.io/badge/Python-3.7|3.8-BRIGHTGREEN)
+![Release](https://img.shields.io/github/v/release/mkbeh/Fereda)
+![Issues](https://img.shields.io/github/issues/mkbeh/Fereda)
 ![License](https://img.shields.io/badge/License-GPLv3.0-Yellow)
 
 [![Discord](https://user-images.githubusercontent.com/7288322/34429117-c74dbd12-ecb8-11e7-896d-46369cd0de5b.png)](https://discord.gg/zPxXhr)
@@ -34,6 +35,8 @@ Bitcoin: bc1qwcp93tr7t7rlwe86zpglusstaq8j50dag0q6ll
 NOTE:
 The list of supported devices means that the utility has been tested on these devices, but it can work correctly on many other devices.
 ```
+
+## **Installation and usage screen cast**
 
 [![Fereda Screencast](https://img.youtube.com/vi/tWXH7tDMWcc/0.jpg)](https://www.youtube.com/watch?v=tWXH7tDMWcc)
 
