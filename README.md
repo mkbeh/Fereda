@@ -35,6 +35,8 @@ NOTE:
 The list of supported devices means that the utility has been tested on these devices, but it can work correctly on many other devices.
 ```
 
+[![Fereda Screencast](https://img.youtube.com/vi/tWXH7tDMWcc/0.jpg)](https://www.youtube.com/watch?v=tWXH7tDMWcc)
+
 ## Installation
 
 > git clone https://github.com/mkbeh/Fereda.git && cd Fereda
@@ -48,8 +50,6 @@ The list of supported devices means that the utility has been tested on these de
 > python3.7 setup.py install
 
 ## Usage
-
-[TO DO youtube screen cast]
 
 ### **Options**
 
