@@ -6,7 +6,7 @@
 ![Issues](https://img.shields.io/github/issues/mkbeh/Fereda)
 ![License](https://img.shields.io/badge/License-GPLv3.0-Yellow)
 
-[![Discord](https://user-images.githubusercontent.com/7288322/34429117-c74dbd12-ecb8-11e7-896d-46369cd0de5b.png)](https://discord.gg/c65hqU)
+[![Discord](https://user-images.githubusercontent.com/7288322/34429117-c74dbd12-ecb8-11e7-896d-46369cd0de5b.png)](https://discord.gg/Ftaynpe)
 
 Cyber security tool of mobile forensics for restoring hide and removed images from gallery and different messengers on Android.
 
