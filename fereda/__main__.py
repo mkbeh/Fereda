@@ -20,6 +20,7 @@
 
 
 import os
+import sys
 import time
 import enum
 import shutil
@@ -37,6 +38,9 @@ from dataclasses import dataclass
 from hashlib import md5
 
 from fereda import __version__, exceptions, decorators
+
+
+# FIXME: bug in output statistic 
 
 
 PREVIEW_IMG = PREVIEW_IMG = '''\u001b[0m \033[1m
@@ -89,19 +93,20 @@ class DisplayInfo(enum.Enum):
     }
 
     templates = {
-        'arrow'                 :   f'{colors.get("yellow")}>>{colors.get("green")}',
-        'lattice'               :   f'{colors.get("red")}##{colors.get("green")}',
-        'star_with_arrow'       :   f'{colors.get("red")}*>{colors.get("cyan")}',
-        'exception'             :   f'{colors.get("cyan")}!!{colors.get("red")}',
+        'info'                 :   f'{colors.get("yellow")}>>{colors.get("yellow")}',
+        'result'               :   f'{colors.get("yellow")}>>{colors.get("green")}',
+        'lattice'              :   f'{colors.get("red")}##{colors.get("green")}',
+        'star_with_arrow'      :   f'{colors.get("red")}*>{colors.get("cyan")}',
+        'exception'            :   f'{colors.get("cyan")}!!{colors.get("red")}',
     }
 
     # Info messages.
     preview_img             =   f'{PREVIEW_IMG}'
-    start                   =   f'{templates.get("arrow")} Utility started...'
-    images_searcher         =   f'{templates.get("arrow")} Running searcher of removed and hidden images...'
-    remove_duplicates       =   f'{templates.get("arrow")} Removing duplicates of found images...'
-    begin_restoring         =   f'{templates.get("arrow")} Running restore of found images...'
-    restore_images_num      =   templates.get("arrow") + ' Summary restored' + colors.get('cyan') + ' {} ' \
+    start                   =   f'{templates.get("info")} Utility started...'
+    images_searcher         =   f'{templates.get("info")} Running searcher of removed and hidden images...'
+    remove_duplicates       =   f'{templates.get("info")} Removing duplicates of found images...'
+    begin_restoring         =   f'{templates.get("info")} Running restore of found images...'
+    restore_images_num      =   templates.get("result") + ' Summary restored' + colors.get('cyan') + ' {} ' \
                                      + colors.get('green') + 'images'
     self_destruction        =   templates.get("star_with_arrow") + colors.get('yellow') + ' Removing utility from device...'
     self_destruction_ok     =   templates.get("star_with_arrow") + colors.get('yellow') + ' Utility was successfully removed from the device.'
@@ -145,10 +150,16 @@ class ImagesRestore():
         self._output_dir = output_dir
         self._move_files_flag = move_files_flag
 
+        self.default_android_point_dir = 'Android/data'
+
         self._create_output_dir()
 
     def _create_output_dir(self):
-        os.makedirs(self._output_dir, exist_ok=True)
+        if 'Android' in os.listdir():
+            os.makedirs(self._output_dir, exist_ok=True)
+        else:
+            DisplayInfo.show_info(DisplayInfo.incorrect_start_dir.value)
+            sys.exit(0)
 
     @staticmethod
     def _get_sum_of_restored_images(data_to_restore):
@@ -230,7 +241,7 @@ class ImagesSearcher(ImagesRestore, Image):
         super().__init__(kwargs['output_dir'], kwargs['move_files'])
         self._restore_data_flag = kwargs['restore_data']
         self._self_destruction_flag = kwargs['self_destruction']
-        self._default_android_point_dir = 'Android/data'
+        # self._default_android_point_dir = 'Android/data'
 
         self._utility_destruction = SelfDestruction()
 
@@ -355,8 +366,8 @@ class ImagesSearcher(ImagesRestore, Image):
         Default_dir = cs.namedtuple('Default_dir', ['name', 'path'])
 
         found_android_data_dirs = (
-            Default_dir(default_dir_name, os.path.join(self._default_android_point_dir, sub_dir))
-            for sub_dir in os.listdir(self._default_android_point_dir)
+            Default_dir(default_dir_name, os.path.join(self.default_android_point_dir, sub_dir))
+            for sub_dir in os.listdir(self.default_android_point_dir)
             for default_dir_name in self.default_android_data_dirs_names
             if default_dir_name in sub_dir
         )
@@ -434,7 +445,7 @@ def cli():
         DisplayInfo.show_info(DisplayInfo.start.value)
         options_handler(**vars(args))
     except exceptions.NoDataToRestore:
-        print(DisplayInfo.no_data_to_restore.value)
+        DisplayInfo.show_info(DisplayInfo.no_data_to_restore.value)
 
     DisplayInfo.show_info(
         DisplayInfo.elapsed_time.value.format(
@@ -444,8 +455,5 @@ def cli():
 
 
 if __name__ == "__main__":
-    try:
-        cli()
-    except FileNotFoundError:
-        DisplayInfo.show_info(DisplayInfo.incorrect_start_dir.value)
+    cli()
  

@@ -39,7 +39,7 @@ logo="
   |  ||  |  |7     |  |  |  |  |  ||     7|     7|     7|  7  |
   !__!!__!__!!_____!  !__!  !__!__!!_____!!_____!!_____!!__!__!                      
 "
-author="||| CREATED BY EXp0s3R3b_RTH SQUAD |> v0.1"
+author="||| CREATED BY EXp0s3R3b_RTH SQUAD |>"
 
 printf "\e[1m%s\n\e[0m" "$logo"
 printf "\t\e[1;31m%s\e[0m\n\n" "$author"
@@ -58,6 +58,7 @@ declare -r BASHRC_LOC="$HOME/.bashrc"
 
 
 function addPYTHONPATH {
+    # TODO: previously: recognize shell, then desired config.
     requireStr="export PYTHONPATH=\"$(pwd | sed 's/\ /\\\ /g')\""
     compareResult=false
 
