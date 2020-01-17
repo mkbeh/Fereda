@@ -18,10 +18,6 @@
 
 # Copyright (c) 2020 January mkbeh
 
-# ----------------------------------------------------------------------------
-# This program is written with the goal: a bad stuff should disappear forever.
-# ----------------------------------------------------------------------------
-
 
 import os
 import sys
