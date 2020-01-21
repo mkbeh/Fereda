@@ -18,4 +18,10 @@
 # Copyright (c) 2020 January mkbeh
 
 
-__version__ = '0.1.3'
+import collections as cs
+
+
+__version__ = '0.1.6'
+
+OFF_PROGRESSBAR_FLAG = []
+STDOUT = cs.deque()

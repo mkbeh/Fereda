@@ -1,5 +1,7 @@
 # Fereda
 
+[TO DO] Make checklist for roadmap and rename it to TODO
+
 ![Platform](https://img.shields.io/badge/Platform-all-RED)
 ![Python](https://img.shields.io/badge/Python-3.7|3.8-BRIGHTGREEN)
 ![Release](https://img.shields.io/github/v/release/mkbeh/Fereda)
@@ -94,27 +96,27 @@ fereda -rm
 
 ## Roadmap
 
-* Add support for other devices.
+* [ ] Add support for other devices.
 
-* Add search and recovery images from the entire storage
+* [ ] Add search and recovery images from the entire storage
 (if device is rooted) and from SDCARD.
 
-* Add option for searching and coping / recovering of files by regex.
+* [ ] Add option for searching and coping / recovering of files by regex.
 
-* Add analysis of text files and notes to the occurrence of a custom template or regex.
+* [ ] Add analysis of text files and notes to the occurrence of a custom template or regex.
 
-* Add file metadata search.
+* [ ] Add file metadata search.
 
-* Add support for other messengers.
+* [ ] Add support for other messengers.
 
-* Add new options such as --exlude-dirs , --include-dirs and search in custom user directories.
+* [ ] Add new options such as --exlude-dirs , --include-dirs and search in custom user directories.
 
-* Add an option in which you can select directories or name of application for search and recovery. For example, only a gallery, only messengers, instant messengers to choose from, etc.
+* [ ] Add an option in which you can select directories or name of application for search and recovery. For example, only a gallery, only messengers, instant messengers to choose from, etc.
 
-* Add sending the found data to the remote server.
+* [ ] Add sending the found data to the remote server.
 
-* Сreate .apk to use the utility directly on the phone.
+* [ ] Сreate .apk to use the utility directly on the phone.
 
-* Add loging.
+* [ ] Add loging.
 
-* Other.
+* [ ] Other.
