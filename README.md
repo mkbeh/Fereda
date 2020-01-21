@@ -1,7 +1,5 @@
 # Fereda
 
-[TO DO] Make checklist for roadmap and rename it to TODO
-
 ![Platform](https://img.shields.io/badge/Platform-all-RED)
 ![Python](https://img.shields.io/badge/Python-3.7|3.8-BRIGHTGREEN)
 ![Release](https://img.shields.io/github/v/release/mkbeh/Fereda)
