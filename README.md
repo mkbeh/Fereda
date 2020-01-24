@@ -34,7 +34,7 @@ The list of supported devices means that the utility has been tested on these de
 
 ## **Installation and usage screen cast**
 
-[![Fereda Screencast](https://img.youtube.com/vi/tWXH7tDMWcc/0.jpg)](https://www.youtube.com/watch?v=tWXH7tDMWcc)
+[![Fereda Screencast](https://img.youtube.com/vi/UqJjgmMkEYs/0.jpg)](https://www.youtube.com/watch?v=UqJjgmMkEYs)
 
 ## Installation
 

@@ -26,9 +26,6 @@ from .displayinfo import DisplayInfo
 from .image import ImagesSearcher
 
 
-# FIXME: bug in output statistic 
-
-
 def options_handler(**kwargs):
     OFF_PROGRESSBAR_FLAG.append(kwargs.get('off_progressbar'))
     ImagesSearcher(**kwargs)()
