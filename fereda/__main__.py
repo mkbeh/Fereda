@@ -21,7 +21,7 @@
 
 import argparse
 
-from . import exceptions, decorators, __version__, OFF_PROGRESSBAR_FLAG
+from . import exceptions, decorators, OFF_PROGRESSBAR_FLAG
 from .displayinfo import DisplayInfo
 from .image import ImagesSearcher
 

@@ -49,7 +49,7 @@ def show_progress():
 
 def progressbar(off_progressbar: list):
     def decorator(func):
-        wraps(func)
+        @wraps(func)
         def wrapper(*args):
             if not off_progressbar[0]:
                 show_progress()

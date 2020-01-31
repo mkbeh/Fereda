@@ -57,7 +57,7 @@ class Image:
             return self.type == other.type and self.hash == other.hash
 
 
-class ImagesRestore():
+class ImagesRestore:
 
     def __init__(self, output_dir: str, move_files_flag: str):
         self._output_dir = output_dir
@@ -88,8 +88,6 @@ class ImagesRestore():
 
     @staticmethod
     def _get_image_restore_path(image_obj, associated_dir_path):
-        image_name = ''
-
         if not image_obj.path.endswith(image_obj.type):
             image_name = image_obj.path + '.' + image_obj.type
         else:
@@ -254,17 +252,17 @@ class ImagesSearcher(ImagesRestore, Image):
             )
 
     def _get_default_dirs_from_device(self):
-        Default_dir = cs.namedtuple('Default_dir', ['name', 'path'])
+        DefaultDir = cs.namedtuple('DefaultDir', ['name', 'path'])
 
         found_android_data_dirs = (
-            Default_dir(default_dir_name, os.path.join(self.default_android_point_dir, sub_dir))
+            DefaultDir(default_dir_name, os.path.join(self.default_android_point_dir, sub_dir))
             for sub_dir in os.listdir(self.default_android_point_dir)
             for default_dir_name in self.default_android_data_dirs_names
             if default_dir_name in sub_dir
         )
 
         found_device_messengers_dirs = (
-            Default_dir(default_messenger_dir, default_messenger_dir) 
+            DefaultDir(default_messenger_dir, default_messenger_dir)
             for default_messenger_dir in self.default_device_messengers_dirs_names
         )
 

@@ -25,10 +25,11 @@ from . import __version__
 from .displayinfo import DisplayInfo
 
 
-class SelfDestruction():
+class SelfDestruction:
     _operation_system = subprocess.check_output(['uname', '-o']).decode('utf-8')
-    
-    def destruction(self):
+
+    @staticmethod
+    def destruction():
         file_bin = '~/.local/bin/fereda'
         egg = f'~/.local/lib/python3.7/site-packages/Fereda-{__version__}-py3.7.egg'
 
@@ -36,7 +37,6 @@ class SelfDestruction():
             os.remove(file_bin)
             os.remove(egg)
             DisplayInfo.show_info(DisplayInfo.self_destruction_ok.value)
-
 
     def destruction_handler(self):
         if self._operation_system != 'GNU/Linux':

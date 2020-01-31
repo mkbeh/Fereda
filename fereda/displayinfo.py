@@ -25,7 +25,7 @@ import enum
 from fereda import __version__, STDOUT
 
 
-PREVIEW_IMG = PREVIEW_IMG = '''\u001b[0m \033[1m
+PREVIEW_IMG = '''\u001b[0m \033[1m
   _________________________________  _______
   7     77     77  _  77     77    \ 7  _  7
   |  ___!|  ___!|    _||  ___!|  7  ||  _  |
