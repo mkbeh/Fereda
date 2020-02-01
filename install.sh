@@ -1,6 +1,3 @@
-#!/bin/bash
-
-
 # This file is part of Fereda.
 
 # Fereda is free software: you can redistribute it and/or modify
@@ -18,12 +15,11 @@
 
 # Copyright (c) 2020 January mkbeh
 
+## yellow            \e[1;33m \e[0m
+## green             \e[1;32m \e[0m
+## red               \e[1;31m \e[0m
 
-set -e
-shopt -s extglob
 
-
-clear
 logo="
   _________________________________  _______
   7     77     77  _  77     77    \ 7  _  7
@@ -31,166 +27,127 @@ logo="
   |  __| |  __|_|  _ \ |  __|_|  |  ||  7  |
   |  7   |     7|  7  ||     7|  !  ||  |  |
   !__!   !_____!!__!__!!_____!!_____!!__!__!
-                                          
+
   _____________________________________   ____   ______________
   7  77     77     77      77  _  77  7   7  7   7     77  _  7
   |  ||  _  ||  ___!!__  __!|  _  ||  |   |  |   |  ___!|    _|
-  |  ||  7  |!__   7  7  7  |  7  ||  !___|  !___|  __|_|  _ \ 
+  |  ||  7  |!__   7  7  7  |  7  ||  !___|  !___|  __|_|  _ \\
   |  ||  |  |7     |  |  |  |  |  ||     7|     7|     7|  7  |
-  !__!!__!__!!_____!  !__!  !__!__!!_____!!_____!!_____!!__!__!                      
+  !__!!__!__!!_____!  !__!  !__!__!!_____!!_____!!_____!!__!__!
 "
 author="||| CREATED BY EXp0s3R3b_RTH SQUAD |>"
 
+
+set -e
+
+clear
 printf "\e[1m%s\n\e[0m" "$logo"
 printf "\t\e[1;31m%s\e[0m\n\n" "$author"
 
-declare -r BASHRC_LOC="$HOME/.bashrc"
+# Only checks for current OS and display specific message.
+OPERATION_SYSTEM=$(uname -o)
 
+if [[ "$OPERATION_SYSTEM" == "GNU/Linux" ]]; then
+    printf "\e[1;33m::> Running Fereda Installer...\n\e[0m" && sleep 1s
+else
+    err_msg="3RROR!!!!!! You are not using Linux.
+    It means you are using another OS.
+    Use supported OS or install utility manually.
+    "
+    printf "\e[1;31m%s\n\e[0m" "$err_msg"
+    return 1
+fi
 
-# yellow            \e[1;33m \e[0m
-# green             \e[1;32m \e[0m
-# red               \e[1;31m \e[0m
+# Checks for the presence of the environment variable PYTHONPATH which
+# must contains utility clonned directory in the system shell
+# configuration file and if the PYTHONPATH env variable is missing,
+# it will be successfully added.
+userShell=$(echo "$SHELL" | rev | cut -d'/' -f 1 | rev)
+postfix="rc"
+shellCfgName=$userShell$postfix
+shellCfgPath="$HOME/.$shellCfgName"
+requireStr="export PYTHONPATH=\"$(pwd | sed 's/\ /\\\ /g')\""
+compareResult=false
 
+printf "\e[1;33m::> Cheching is PYTHONPATH in .%s...\n\e[0m" "$shellCfgName" && sleep 1s
 
- OPERATION_SYSTEM=$(uname -o)
- SUPPORTED_PYTHON_VERSIONS=(3.7 3.8)
- INSTALLED_PYTHON_VERSION=""
+while IFS= read -r line
+do
+    if [[ $line == "$requireStr" ]]; then
+        printf "\e[1;32m[+] PYTHONPATH is already added to .%s\n\e[0m" "$shellCfgName" && sleep 1s
 
-
-function addPYTHONPATH {
-    # TODO: previously: recognize shell, then desired config.
-    requireStr="export PYTHONPATH=\"$(pwd | sed 's/\ /\\\ /g')\""
-    compareResult=false
-
-    printf "\e[1;33m::> Cheching is PYTHONPATH in .bashrc...\n\e[0m" && sleep 2s
-
-    while IFS= read -r line
-    do
-        if [[ $line == "$requireStr" ]]; then
-            printf "\e[1;32m[+] PYTHONPATH already added to .bashrc\n\e[0m" && sleep 2s
-
-            compareResult=true
-            break
-        fi
-    done <<< "$(tail -n5 "$BASHRC_LOC")"
-
-    if ! $compareResult ; then
-        printf "\e[1;33m::> PYTHONPATH not added to .bashrc. Adding PYTHONPATH...\n\e[0m" && sleep 1s
-        echo "$requireStr" >> "$BASHRC_LOC" && . "$BASHRC_LOC"
-        printf "\e[1;32m[+] PYTHON path successfully added\n\e[0m" && sleep 1s
+        compareResult=true
+        break
     fi
-}
+done <<< "$(tail -n5 "$shellCfgPath")"
 
+if ! $compareResult ; then
+    printf "\e[1;33m::> PYTHONPATH is not added to .%s. Adding PYTHONPATH...\n\e[0m" "$shellCfgName" && sleep 1s
+    echo "$requireStr" >> "$shellCfgPath" && . "$shellCfgPath"
+    printf "\e[1;32m[+] PYTHON path successfully added to %s\n\e[0m" "$shellCfgName" && sleep 1s
+fi
+
+# First, look for installed versions of Python, then check whether installed
+# versions of Python in the current system are in the list of supported ones.
+INSTALLED_PYTHON_VERSION=""
+SUPPORTED_PYTHON_VERSIONS=(3.7 3.8)
+INCORRECT_PYTHON_VERSION_ERROR=\
+"\e[1;33m::> To installing Fereda utility - previously you need to install Python (supported versions: ${SUPPORTED_PYTHON_VERSIONS[*]}).
+    Use this guide https://realpython.com/installing-python/#ubuntu to istall Python.\n\e[0m"
+
+pythonVersions=(
+    "$(command python -V 2> /dev/null || echo Not Found)"
+    "$(command python3 -V 2> /dev/null || echo Not Found)"
+)
+
+for pythonVersion in "${pythonVersions[@]}"; do
+    if [[ "$pythonVersion" =~ ^Python\ 3 ]]; then
+        INSTALLED_PYTHON_VERSION=$(echo "$pythonVersion" | tr "[:upper:]" "[:lower:]" | sed -e 's/ //' | cut -c1-7)
+        break
+    fi
+done
+
+if test -z "$INSTALLED_PYTHON_VERSION"; then
+    echo "$INCORRECT_PYTHON_VERSION_ERROR"
+
+    return 1
+else
+    printf "\e[1;32m[+] Found installed %s\n\e[0m" "$pythonVersion" && sleep 1s
+fi
+
+printf "\e[1;33m::> Checking is installed Python version supported...\n\e[0m" && sleep 1s
+installedVersionNum=$(echo "$pythonVersion" | cut -d' ' -f2)
+supportedFlag=false
+
+for rVer in "${SUPPORTED_PYTHON_VERSIONS[@]}"; do
+    if [[ "$installedVersionNum" =~ ^$rVer ]]; then
+        printf "\e[1;32m[+] Installed Python %s version supported. \e[0m \n" "$installedVersionNum" && sleep 1s
+        supportedFlag=true
+        break
+    fi
+done
+
+# Installing `Fereda` utility.
+if [ $supportedFlag = true ];then
+    printf "\e[1;33m::> Installing Fereda utility...\e[0m \n" && sleep 1s
+else
+    echo "$INCORRECT_PYTHON_VERSION_ERROR"
+    return 1
+fi
 
 function getLatestPackageInDir {
     local package=$(ls dist/ | sort -V | tail -n 1)
     echo "${package}"
 }
 
+$INSTALLED_PYTHON_VERSION setup.py bdist_egg --exclude-source-files &> /dev/null
+package=$(getLatestPackageInDir)
 
-function installUtil {
-    $INSTALLED_PYTHON_VERSION setup.py bdist_egg --exclude-source-files
-    package=$(getLatestPackageInDir)
-    
-    if [[ -n $VIRTUAL_ENV ]]; then
-        $INSTALLED_PYTHON_VERSION -m easy_install dist/"${package}"
-    else
-        $INSTALLED_PYTHON_VERSION -m easy_install --user dist/"${package}"
-    fi
-
-    printf "\e[1;32m[+] Utility was successfully installed. To use it run command: ~/.local/bin/fereda -h\n\e[0m" && sleep 1s
-}
-
-
-function isPythonVersionSupport {
-    printf "\e[1;33m::> Checking is installed Python version supported...\n\e[0m" && sleep 2s
-    installedVersionNum=$(echo "$1" | cut -d' ' -f2) 
-
-    for rVer in "${SUPPORTED_PYTHON_VERSIONS[@]}"; do
-        if [[ "$installedVersionNum" =~ ^$rVer ]]; then
-            printf "\e[1;32m[+] Installed Python %s version supported. \e[0m \n" "$installedVersionNum" && sleep 3s
-            printf "\e[1;33m::> Installing Fereda utility...\e[0m \n" && sleep 4s
-            installUtil
-            return         
-        fi
-    done
-
-    installRequirements
-}
-
-
-function installAndroidRequirements {
-    printf "::> Installing requirements for %s...\n" "$OPERATION_SYSTEM"
-
-    pkg install x11-repo
-    pkg update && pkg upgrade -y
-    pkg install python -y
-    pkg install sox -y                           # fixed python-magic
-    pkg install libjpeg-turbo clang -y           # Fixed Pillow
-    pkg install clang fftw
-
-    INSTALLED_PYTHON_VERSION=$(python --version 2>&1 | tr "[:upper:]" "[:lower:]" | sed -e 's/ //' | cut -c1-7)
-}
-
-
-function installRequirements {
-    if [[ "$OPERATION_SYSTEM" == "Android" ]]; then
-        installAndroidRequirements
-        installUtil
-    else
-        printf "\e[1;33m::> To installing Fereda util in debug mode previously you need to install Python (supported versions: %s).\n" \
-             "Use this guidehttps://realpython.com/installing-python/#ubuntu to istall Python.\e[0m" "${SUPPORTED_PYTHON_VERSIONS[*]}"
-    fi
-}
-
-
-function isPythonInstalled {
-    pythonVersions=(
-        "$(command python -V 2> /dev/null || echo Not Found)"
-        "$(command python3 -V 2> /dev/null || echo Not Found)"
-    )
-
-    for pythonVersion in "${pythonVersions[@]}"; do
-        if [[ "$pythonVersion" =~ ^Python\ 3 ]]; then
-            INSTALLED_PYTHON_VERSION=$(echo "$pythonVersion" | tr "[:upper:]" "[:lower:]" | sed -e 's/ //' | cut -c1-7)
-            break
-        fi
-    done
-
-    if test -z "$INSTALLED_PYTHON_VERSION"; then
-        printf "\e[1;33m::> Python is not installed, installing Python...\n\e[0m" && sleep 2s
-        installRequirements
-    else 
-        printf "\e[1;32m[+] Found installed %s\n\e[0m" "$pythonVersion" && sleep 3s
-        isPythonVersionSupport "$pythonVersion"
-    fi
-}
-
-
-function debug {
-    printf "\e[1;33m::> Running debug mode...\n\e[0m" && sleep 1s
-    addPYTHONPATH
-    isPythonInstalled
-}
-
-
-function battle {
-    printf "\e[1;33m::> Running battle mode...\n\e[0m" && sleep 1s
-    isPythonInstalled
-
-    cd .. && rm -rf Fereda
-}
-
-
-if [[ "$OPERATION_SYSTEM" == "Android" ]]; then
-    printf "\e[1;31mbattle mode not supported now...\n\e[0m" && sleep 1s
-    # battle
-elif [[ "$OPERATION_SYSTEM" == "GNU/Linux" ]]; then
-    debug
+if [[ -n $VIRTUAL_ENV ]]; then
+    $INSTALLED_PYTHON_VERSION -m easy_install dist/"${package}" > /dev/null
 else
-    err_msg="3RROR!!!!!! You are not using Linux or Android OS.
-    It means you are using another OS.
-    Use supported OS or install utility manually.
-    "
-    printf "\e[1;31m%s\n\e[0m" "$err_msg"
+    $INSTALLED_PYTHON_VERSION -m easy_install --user dist/"${package}" > /dev/null
 fi
+
+printf "\e[1;32m[+] Utility was successfully installed. To use it run command: ~/.local/bin/fereda -h\n\e[0m"
+rm -rf build/ dist/ Fereda.egg-info

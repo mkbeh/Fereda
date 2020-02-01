@@ -42,7 +42,7 @@ The list of supported devices means that the utility has been tested on these de
 
 ### **Linux**
 
-> chmod u+x install.sh && ./install.sh
+> chmod u+x install.sh && <your_shell_name> install.sh
 
 ### **Other OS**
 
