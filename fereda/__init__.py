@@ -21,7 +21,7 @@
 import collections as cs
 
 
-__version__ = '0.1.8'
+__version__ = '0.2.8'
 
 OFF_PROGRESSBAR_FLAG = []
 STDOUT = cs.deque()
