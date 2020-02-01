@@ -15,6 +15,7 @@
 
 # Copyright (c) 2020 January mkbeh
 
+
 ## yellow            \e[1;33m \e[0m
 ## green             \e[1;32m \e[0m
 ## red               \e[1;31m \e[0m
@@ -109,7 +110,6 @@ done
 
 if test -z "$INSTALLED_PYTHON_VERSION"; then
     echo "$INCORRECT_PYTHON_VERSION_ERROR"
-
     return 1
 else
     printf "\e[1;32m[+] Found installed %s\n\e[0m" "$pythonVersion" && sleep 1s
