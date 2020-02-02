@@ -32,6 +32,9 @@ NOTE:
 The list of supported devices means that the utility has been tested on these devices, but it can work correctly on many other devices.
 ```
 
+**The following actions were performed on Debian based
+distr with kernel 5.4.0+**
+
 ## **Installation and usage screen cast**
 
 [![Fereda Screencast](https://img.youtube.com/vi/UqJjgmMkEYs/0.jpg)](https://www.youtube.com/watch?v=UqJjgmMkEYs)
