@@ -18,8 +18,8 @@ Bitcoin: bc1qwcp93tr7t7rlwe86zpglusstaq8j50dag0q6ll
 
 **`Supporting devices`**:
 
-* Samsung Note 8
-* RedmiGo 7A
+* Samsung
+* Redmi
 * Micromax
 
 **`Supporting messengers`**:
