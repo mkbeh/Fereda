@@ -51,10 +51,10 @@ OPERATION_SYSTEM=$(uname -o)
 if [[ "$OPERATION_SYSTEM" == "GNU/Linux" ]]; then
     printf "\e[1;33m::> Running Fereda Installer...\n\e[0m" && sleep 1s
 else
-    err_msg="3RROR!!!!!! You are not using Linux.
-    It means you are using another OS.
-    Use supported OS or install utility manually.
-    "
+    err_msg="
+  3RROR!!!!!! You are not using Linux.
+  It means you are using another OS.
+  Use supported OS or install utility manually."
     printf "\e[1;31m%s\n\e[0m" "$err_msg"
     return 1
 fi
