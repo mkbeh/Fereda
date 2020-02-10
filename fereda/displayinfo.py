@@ -1,4 +1,23 @@
 # -*- coding: utf-8 -*-
+
+# This file is part of Fereda.
+
+# Fereda is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License 3 as published by
+# the Free Software Foundation.
+
+# Fereda is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Fereda.  If not, see <https://www.gnu.org/licenses/>.
+
+
+# Copyright (c) 2020 January mkbeh
+
+
 import os
 import enum
 
@@ -13,7 +32,7 @@ PREVIEW_IMG = '''\u001b[0m \033[1m
   |  7   |     7|  7  ||     7|  !  ||  |  |
   !__!   !_____!!__!__!!_____!!_____!!__!__!
 
-  \u001b[31m||| CREATED BY NoName |> v{}\n
+  \u001b[31m||| CREATED BY EXp0s3R3b_RTH SQUAD |> v{}\n
   With the goal of making the world better...\u001b[0m \n
 '''.format(__version__)
 

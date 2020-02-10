@@ -36,7 +36,7 @@ logo="
   |  ||  |  |7     |  |  |  |  |  ||     7|     7|     7|  7  |
   !__!!__!__!!_____!  !__!  !__!__!!_____!!_____!!_____!!__!__!
 "
-author="||| CREATED BY NoName |>"
+author="||| CREATED BY EXp0s3R3b_RTH SQUAD |>"
 slogan="With the goal of making the world better..."
 
 
