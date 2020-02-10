@@ -132,3 +132,14 @@ dmypy.json
 .vscode/
 test.py
 fereda/test_images
+#!/LICENSE
+LICENSE
+README.md
+.idea/*
+#.idea/codestream.xml
+#.idea/discord.xml
+#.idea/inspectionProfiles/
+#.idea/misc.xml
+#.idea/modules.xml
+#.idea/sonarlint/
+#.idea/vcs.xml

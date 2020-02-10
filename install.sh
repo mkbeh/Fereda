@@ -1,20 +1,3 @@
-# This file is part of Fereda.
-
-# Fereda is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License 3 as published by
-# the Free Software Foundation.
-
-# Fereda is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-
-# You should have received a copy of the GNU General Public License
-# along with Fereda.  If not, see <https://www.gnu.org/licenses/>.
-
-
-# Copyright (c) 2020 January mkbeh
-
 
 ## yellow            \e[1;33m \e[0m
 ## green             \e[1;32m \e[0m
@@ -36,7 +19,8 @@ logo="
   |  ||  |  |7     |  |  |  |  |  ||     7|     7|     7|  7  |
   !__!!__!__!!_____!  !__!  !__!__!!_____!!_____!!_____!!__!__!
 "
-author="||| CREATED BY EXp0s3R3b_RTH SQUAD |>"
+author="||| CREATED BY NoName |>"
+slogan="With the goal of making the world better..."
 
 
 set -e
@@ -44,6 +28,7 @@ set -e
 clear
 printf "\e[1m%s\n\e[0m" "$logo"
 printf "\t\e[1;31m%s\e[0m\n\n" "$author"
+printf "\t\e[1;31m%s\e[0m\n\n" "$slogan"
 
 # Only checks for current OS and display specific message.
 OPERATION_SYSTEM=$(uname -o)
