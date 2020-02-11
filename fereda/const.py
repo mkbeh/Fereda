@@ -2,6 +2,7 @@
 from fereda import __version__
 
 
+# ---- Main.
 PREVIEW_IMG = '''\u001b[0m \033[1m
   _________________________________  _______
   7     77     77  _  77     77    \ 7  _  7
@@ -14,10 +15,10 @@ PREVIEW_IMG = '''\u001b[0m \033[1m
   ...With the goal of making the world better...\u001b[0m \n
 '''.format(__version__)
 
-# Input suggestion chars.
+# ---- Input suggestion chars.
 INPUT_SUGGESTION = '>> '
 
-# Messages
+# ---- Messages.
 PLUGINS = """List of available plugins:
 + search_files
 + search_removed_images
