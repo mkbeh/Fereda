@@ -23,12 +23,18 @@ class PluginsHandler:
         self._selected_plugin(**kwargs)
 
 
+def parser_base_options(parser):
+    parser.add_argument('-f', '--move-files', action='store_true')
+
+
 def parser_options(parser):
+    parser_base_options(parser)
     parser.add_argument('-r', '--regex', metavar='')
     parser.add_argument('-d', '--directories', metavar='')
 
 
 def parser_options1(parser):
+    parser_base_options(parser)
     parser.add_argument('-m', '--applications', metavar='')
 
 
