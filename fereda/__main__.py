@@ -4,8 +4,9 @@ import os
 import sys
 import argparse
 
+from fereda.plugins import SearchFiles, SearchRemovedImages, SearchHiddenImages, TextFileAnalysis, \
+    DEFAULT_APPLICATIONS, DEFAULT_REGEX
 from fereda.extra.info import Info
-from fereda import SearchFiles, SearchRemovedImages, SearchHiddenImages, SearchHiddenFiles, TextFileAnalysis
 
 
 class PluginsHandler:
@@ -13,7 +14,6 @@ class PluginsHandler:
         'search_files'                  : SearchFiles,
         'search_removed_images'         : SearchRemovedImages,
         'search_hidden_images'          : SearchHiddenImages,
-        'search_hidden_files'           : SearchHiddenFiles,
         'text_file_analysis'            : TextFileAnalysis,
     }
 
@@ -29,13 +29,13 @@ def parser_base_options(parser):
 
 def parser_options(parser):
     parser_base_options(parser)
-    parser.add_argument('-r', '--regex', metavar='')
-    parser.add_argument('-d', '--directories', metavar='')
+    parser.add_argument('-r', '--regex', metavar='', nargs='*', default=DEFAULT_REGEX)
+    parser.add_argument('-d', '--directories', metavar='', nargs='*')
 
 
 def parser_options1(parser):
     parser_base_options(parser)
-    parser.add_argument('-m', '--applications', metavar='')
+    parser.add_argument('-m', '--applications', metavar='', nargs='*', default=DEFAULT_APPLICATIONS)
 
 
 def args_checker():
@@ -60,8 +60,6 @@ def cli():
     parser_options1(search_removed_images)
     search_hidden_images = subparsers.add_parser(name='search_hidden_images')
     parser_options1(search_hidden_images)
-    search_hidden_files = subparsers.add_parser(name='search_hidden_files')
-    parser_options(search_hidden_files)
     text_file_analysis = subparsers.add_parser(name='text_file_analysis')
     parser_options(text_file_analysis)
 

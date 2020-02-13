@@ -2,6 +2,9 @@
 from fereda import __version__
 
 
+# ---- Input suggestion chars.
+INPUT_SUGGESTION = '>> '
+
 # ---- Main.
 PREVIEW_IMG = '''\u001b[0m \033[1m
   _________________________________  _______
@@ -14,9 +17,6 @@ PREVIEW_IMG = '''\u001b[0m \033[1m
   \u001b[31m||| CREATED BY EXp0s3R3b_RTH SQUAD |> v{}\n
   ...With the goal of making the world better...\u001b[0m \n
 '''.format(__version__)
-
-# ---- Input suggestion chars.
-INPUT_SUGGESTION = '>> '
 
 # ---- Messages.
 PLUGINS = """List of available plugins:
