@@ -11,6 +11,6 @@ DEFAULT_APPLICATIONS = (
     'VK',
 )
 
-DEFAULT_REGEX = (
+DEFAULT_REGEXPRESSIONS = (
     '.txt',
 )
