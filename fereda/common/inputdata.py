@@ -27,7 +27,7 @@ class FilesPathInputData(GenericInputData):
         self.path = path
 
     @staticmethod
-    def _is_file_match_regex(file: str, regexpressions: list):
+    def _is_file_match_regex(file: str, regexpressions: list) -> str:
         for regex in regexpressions:
             if re.search(regex, file):
                 return file
