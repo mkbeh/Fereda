@@ -5,7 +5,7 @@ import sys
 import argparse
 
 from fereda.plugins import SearchFiles, SearchRemovedImages, SearchHiddenImages, TextFileAnalysis, \
-    DEFAULT_APPLICATIONS, DEFAULT_REGEX
+    DEFAULT_APPLICATIONS, DEFAULT_REGEXPRESSIONS
 from fereda.extra.info import Info
 
 
