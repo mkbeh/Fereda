@@ -29,7 +29,7 @@ def parser_base_options(parser):
 
 def parser_options(parser):
     parser_base_options(parser)
-    parser.add_argument('-r', '--regex', metavar='', nargs='*', default=DEFAULT_REGEX)
+    parser.add_argument('-r', '--regex', metavar='', nargs='*', default=DEFAULT_REGEXPRESSIONS)
     parser.add_argument('-d', '--directories', metavar='', nargs='*')
 
 
