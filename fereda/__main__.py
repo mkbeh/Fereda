@@ -5,8 +5,9 @@ import sys
 import argparse
 
 from fereda.plugins import SearchFiles, SearchRemovedImages, SearchHiddenImages, TextFileAnalysis, \
-    DEFAULT_APPLICATIONS, DEFAULT_REGEXPRESSIONS
+    DEFAULT_APPLICATIONS
 from fereda.extra.info import Info
+from fereda.additional.file_names_regexpressions import FILE_NAMES_REGEXPRESSIONS
 
 
 class PluginsHandler:
@@ -18,9 +19,8 @@ class PluginsHandler:
     }
 
     def __init__(self, **kwargs):
-        self._plugin = kwargs.get('plugins')
-        self._selected_plugin = self._plugins.get(self._plugin)
-        self._selected_plugin(**kwargs)
+        self._plugin = self._plugins.get(kwargs.get('plugins'))
+        self._plugin(**kwargs).run()
 
 
 def parser_base_options(parser):
@@ -29,7 +29,7 @@ def parser_base_options(parser):
 
 def parser_options(parser):
     parser_base_options(parser)
-    parser.add_argument('-r', '--regex', metavar='', nargs='*', default=DEFAULT_REGEXPRESSIONS)
+    parser.add_argument('-r', '--regex', metavar='', nargs='*', default=FILE_NAMES_REGEXPRESSIONS)
     parser.add_argument('-d', '--directories', metavar='', nargs='*')
 
 

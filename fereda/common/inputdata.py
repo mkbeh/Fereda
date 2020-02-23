@@ -53,24 +53,16 @@ class FilesPathInputData(GenericInputData):
                 yield from cls._search_files(dir_path, files, regexpressions)
 
     @classmethod
-    def _get_compiled_regex(cls, regexpressions: list) -> list:
-        regexprs = []
-
-        for regex in regexpressions:
-            try:
-                r = re.compile(rf'{regex}')
-            except re.error:
-                raise Exception(f'Incorrect regex "{regex}". Input correct regex.')
-            else:
-                regexprs.append(r)
-
-        return regexprs
-
-    @classmethod
     def generate_inputs(cls, config: dict):
         directories, regexpressions = cls.parse_config(config)
-        regexpressions = cls._get_compiled_regex(regexpressions)
         yield from cls._search_files_handler(regexpressions, directories)
+
+    def get_file_data(self):
+        # TODO: replace tuple to namedtuple
+        return (
+            open(self.path, encoding='utf-8', errors='ignore').read(),
+            self.path,
+        )
 
 
 class AppsPathInputData(GenericInputData):

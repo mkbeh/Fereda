@@ -10,7 +10,3 @@ DEFAULT_APPLICATIONS = (
     'Telegram',
     'VK',
 )
-
-DEFAULT_REGEXPRESSIONS = (
-    '.txt',
-)
