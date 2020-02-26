@@ -4,10 +4,13 @@ import os
 import sys
 import argparse
 
-from fereda.plugins import SearchFiles, SearchRemovedImages, SearchHiddenImages, TextFileAnalysis, \
-    DEFAULT_APPLICATIONS
+from fereda.plugins import SearchFiles, SearchRemovedImages, SearchHiddenImages, TextFileAnalysis
 from fereda.extra.info import Info
+from fereda.extra.utils import parse_yaml
 from fereda.additional.file_names_regexpressions import FILE_NAMES_REGEXPRESSIONS
+
+
+DEFAULT_APPLICATIONS = parse_yaml('fereda/additional/applications.yaml')
 
 
 class PluginsHandler:

@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 import re
 
+import yaml
+
+
+def parse_yaml(cfg_path):
+    with open(cfg_path) as f:
+        return yaml.safe_load(f)
+
 
 def get_compiled_regex(regexpressions: tuple) -> list:
     regexprs = []
