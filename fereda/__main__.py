@@ -54,14 +54,11 @@ def cli():
     parser = argparse.ArgumentParser(prog='Fereda')
     subparsers = parser.add_subparsers(dest='plugins')
 
-    search_files = subparsers.add_parser(name='search_files')
-    parser_options(search_files)
-    search_removed_images = subparsers.add_parser(name='search_removed_images')
-    parser_options1(search_removed_images)
-    search_hidden_images = subparsers.add_parser(name='search_hidden_images')
-    parser_options1(search_hidden_images)
-    text_file_analysis = subparsers.add_parser(name='text_file_analysis')
-    parser_options(text_file_analysis)
+    parser_options(subparsers.add_parser(name='search_files'))
+    parser_options(subparsers.add_parser(name='text_file_analysis'))
+
+    parser_options1(subparsers.add_parser(name='search_removed_images'))
+    parser_options1(subparsers.add_parser(name='search_hidden_images'))
 
     args = parser.parse_args()
     PluginsHandler(**vars(args))
