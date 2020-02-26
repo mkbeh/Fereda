@@ -3,6 +3,7 @@ import os
 import re
 
 from abc import ABCMeta, abstractmethod
+from collections import namedtuple
 
 
 class GenericInputData(metaclass=ABCMeta):
@@ -12,7 +13,7 @@ class GenericInputData(metaclass=ABCMeta):
         pass
 
     @staticmethod
-    def parse_config(config):
+    def parse_options(config):
         try:
             return config['applications']
         except KeyError:
@@ -53,13 +54,13 @@ class FilesPathInputData(GenericInputData):
                 yield from cls._search_files(dir_path, files, regexpressions)
 
     @classmethod
-    def generate_inputs(cls, config: dict):
-        directories, regexpressions = cls.parse_config(config)
+    def generate_inputs(cls, cli_options: dict):
+        directories, regexpressions = cls.parse_options(cli_options)
         yield from cls._search_files_handler(regexpressions, directories)
 
     def get_file_data(self):
-        # TODO: replace tuple to namedtuple
-        return (
+        File = namedtuple('File', ['data', 'path'])
+        return File(
             open(self.path, encoding='utf-8', errors='ignore').read(),
             self.path,
         )
@@ -73,5 +74,5 @@ class AppsPathInputData(GenericInputData):
         self.path = path
 
     @classmethod
-    def generate_inputs(cls, config: dict):
-        applications = cls.parse_config(config)
+    def generate_inputs(cls, cli_options: dict):
+        applications = cls.parse_options(cli_options)

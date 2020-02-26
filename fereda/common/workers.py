@@ -23,10 +23,9 @@ class GenericWorker(metaclass=ABCMeta):
 
 
 class TextAnalysisWorker(GenericWorker):
-    # TODO: replace tuple to namedtuple
     def map(self):
-        data, file_path = self.input_data.get_file_data()
+        file_obj = self.input_data.get_file_data()
 
         for regex in TEXT_ANALYSIS_REGEXPRESSIONS:
-            if re.search(regex, data):
-                self.result = (True, file_path, regex.pattern)
+            if re.search(regex, file_obj.data):
+                self.result = (True, file_obj.path, regex.pattern)
