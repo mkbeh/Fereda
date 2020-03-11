@@ -3,10 +3,10 @@ import re
 
 from abc import ABCMeta, abstractmethod
 
-from fereda.additional.text_analysis_regexpressions import TEXT_ANALYSIS_REGEXPRESSIONS
-
 
 class GenericWorker(metaclass=ABCMeta):
+    _cli_options = None
+
     def __init__(self, input_data):
         self.input_data = input_data
         self.result = None
@@ -16,16 +16,18 @@ class GenericWorker(metaclass=ABCMeta):
         pass
 
     @classmethod
-    def create_workers(cls, input_class, config):
+    def create_workers(cls, input_class, cli_options):
+        if not cls._cli_options:
+            cls._cli_options = cli_options
+
         return (
-            cls(input_data) for input_data in input_class.generate_inputs(config)
+            cls(input_data) for input_data in input_class.generate_inputs(cli_options)
         )
 
 
 class TextAnalysisWorker(GenericWorker):
     def map(self):
         file_obj = self.input_data.get_file_data()
-
-        for regex in TEXT_ANALYSIS_REGEXPRESSIONS:
+        for regex in self._cli_options.get('analysis_word'):
             if re.search(regex, file_obj.data):
                 self.result = (True, file_obj.path, regex.pattern)

@@ -5,6 +5,8 @@ import re
 from abc import ABCMeta, abstractmethod
 from collections import namedtuple
 
+from fereda.extra import utils
+
 
 class GenericInputData(metaclass=ABCMeta):
     @classmethod
@@ -12,51 +14,75 @@ class GenericInputData(metaclass=ABCMeta):
     def generate_inputs(cls, config):
         pass
 
+
+class FilesOptionsCheckerMixin:
     @staticmethod
-    def parse_options(config):
-        try:
-            return config['applications']
-        except KeyError:
-            return config.get('directories', None), config['regex']
+    def _get_option_file_data(file):
+        with open(file) as f:
+            return [line for line in f]
+
+    @classmethod
+    def _check_option(cls, cli_options: dict, option_name: str):
+        option_value = cli_options.get(option_name)
+
+        if not option_value:
+            return
+
+        if len(option_value) == 1 and os.path.isfile(option_value[0]):
+            cli_options[option_name] = utils.get_compiled_regex(cls._get_option_file_data(option_value[0]))
+        else:
+            cli_options[option_name] = utils.get_compiled_regex(option_value)
+
+    @classmethod
+    def check_and_prepare_options(cls, cli_options: dict):
+        options_names = ('file_name', 'analysis_word', 'directories')
+        for option_name in cli_options.keys():
+            if option_name in options_names:
+                cls._check_option(cli_options, option_name)
+
+        return cli_options
 
 
-class FilesPathInputData(GenericInputData):
+class FilesPathInputData(GenericInputData, FilesOptionsCheckerMixin):
     __slots__ = ('path', )
+
+    _cli_options = None
 
     def __init__(self, path: str):
         super().__init__()
         self.path = path
 
-    @staticmethod
-    def _is_file_match_regex(file: str, regexpressions: list) -> str:
-        for regex in regexpressions:
-            if re.search(regex, file):
+    @classmethod
+    def _is_file_name_match_regex(cls, file: str) -> str:
+        for file_name_regex in cls._cli_options['file_name']:
+            if re.search(file_name_regex, file):
                 return file
 
     @classmethod
-    def _search_files(cls, dir_path: str, files: list, regexpressions: list):
+    def _search_files(cls, dir_path: str, files: list):
         for file in files:
-            if cls._is_file_match_regex(file, regexpressions):
+            if cls._is_file_name_match_regex(file):
                 yield cls(os.path.join(dir_path, file))
 
     @classmethod
-    def _search_files_by_directories(cls, dir_path: str, files: list, regexpressions: list, directories: list):
+    def _search_files_by_directories(cls, dir_path: str, files: list):
         dir_name = dir_path.split('/')[-1]
-        if dir_name in directories:
-            yield from cls._search_files(dir_path, files, regexpressions)
+        for directory_regex in cls._cli_options['directories']:
+            if re.search(directory_regex, dir_name):
+                yield from cls._search_files(dir_path, files)
 
     @classmethod
-    def _search_files_handler(cls, regexpressions: list, directories: list):
+    def _search_files_handler(cls):
         for dir_path, _, files in os.walk(os.getcwd()):
-            if directories:
-                yield from cls._search_files_by_directories(dir_path, files, regexpressions, directories)
+            if cls._cli_options['directories']:
+                yield from cls._search_files_by_directories(dir_path, files)
             else:
-                yield from cls._search_files(dir_path, files, regexpressions)
+                yield from cls._search_files(dir_path, files)
 
     @classmethod
     def generate_inputs(cls, cli_options: dict):
-        directories, regexpressions = cls.parse_options(cli_options)
-        yield from cls._search_files_handler(regexpressions, directories)
+        cls._cli_options = cls.check_and_prepare_options(cli_options)
+        yield from cls._search_files_handler()
 
     def get_file_data(self):
         File = namedtuple('File', ['data', 'path'])
@@ -75,4 +101,4 @@ class AppsPathInputData(GenericInputData):
 
     @classmethod
     def generate_inputs(cls, cli_options: dict):
-        applications = cls.parse_options(cli_options)
+        pass

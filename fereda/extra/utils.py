@@ -9,8 +9,8 @@ def parse_yaml(cfg_path):
         return yaml.safe_load(f)
 
 
-def get_compiled_regex(regexpressions: tuple) -> list:
-    regexprs = []
+def get_compiled_regex(regexpressions: list) -> list:
+    compiled_regexprs = []
 
     for regex in regexpressions:
         try:
@@ -18,6 +18,6 @@ def get_compiled_regex(regexpressions: tuple) -> list:
         except re.error:
             raise Exception(f'Incorrect regex "{regex}". Input correct regex.')
         else:
-            regexprs.append(r)
+            compiled_regexprs.append(r)
 
-    return regexprs
+    return compiled_regexprs

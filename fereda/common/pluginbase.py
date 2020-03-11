@@ -21,6 +21,6 @@ class MultiThreadingPluginBase(metaclass=ABCMeta):
         results = [worker.result for worker in workers]
         return results
 
-    def custom_map(self, worker_class, input_class, config):
-        workers = worker_class.create_workers(input_class, config)
+    def custom_map(self, worker_class, input_class, cli_options):
+        workers = worker_class.create_workers(input_class, cli_options)
         return self.execute(workers)

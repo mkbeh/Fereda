@@ -4,21 +4,17 @@ import os
 import sys
 import argparse
 
-from fereda.plugins import SearchFiles, SearchRemovedImages, SearchHiddenImages, TextFileAnalysis
+from fereda.plugins import SearchRemovedAndHiddenImages, TextFileAnalysis
 from fereda.extra.info import Info
-from fereda.extra.utils import parse_yaml
-from fereda.additional.file_names_regexpressions import FILE_NAMES_REGEXPRESSIONS
 
 
-DEFAULT_APPLICATIONS = parse_yaml('fereda/additional/applications.yaml')
+# TODO: send data to remote server.
 
 
 class PluginsHandler:
     _plugins = {
-        'search_files'                  : SearchFiles,
-        'search_removed_images'         : SearchRemovedImages,
-        'search_hidden_images'          : SearchHiddenImages,
-        'text_file_analysis'            : TextFileAnalysis,
+        'search_images'           : SearchRemovedAndHiddenImages,
+        'text_file_analysis'      : TextFileAnalysis,
     }
 
     def __init__(self, **kwargs):
@@ -27,18 +23,19 @@ class PluginsHandler:
 
 
 def parser_base_options(parser):
-    parser.add_argument('-f', '--move-files', action='store_true')
+    parser.add_argument('-p', '--start-point', type=str, default=os.getcwd())
 
 
-def parser_options(parser):
+def parser_options_file_analysis(parser):
     parser_base_options(parser)
-    parser.add_argument('-r', '--regex', metavar='', nargs='*', default=FILE_NAMES_REGEXPRESSIONS)
+    parser.add_argument('-f', '--file-name', metavar='', nargs='+', type=str, default=['.*'])
+    parser.add_argument('-a', '--analysis-word', required=True, metavar='', nargs='*')
     parser.add_argument('-d', '--directories', metavar='', nargs='*')
 
 
-def parser_options1(parser):
+def parser_options_search_images(parser):
     parser_base_options(parser)
-    parser.add_argument('-m', '--applications', metavar='', nargs='*', default=DEFAULT_APPLICATIONS)
+    parser.add_argument('-m', '--applications', metavar='', nargs='*')
 
 
 def args_checker():
@@ -57,11 +54,8 @@ def cli():
     parser = argparse.ArgumentParser(prog='Fereda')
     subparsers = parser.add_subparsers(dest='plugins')
 
-    parser_options(subparsers.add_parser(name='search_files'))
-    parser_options(subparsers.add_parser(name='text_file_analysis'))
-
-    parser_options1(subparsers.add_parser(name='search_removed_images'))
-    parser_options1(subparsers.add_parser(name='search_hidden_images'))
+    parser_options_search_images(subparsers.add_parser(name='search_images'))
+    parser_options_file_analysis(subparsers.add_parser(name='text_file_analysis'))
 
     args = parser.parse_args()
     PluginsHandler(**vars(args))

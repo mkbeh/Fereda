@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
 
-class SearchHiddenImages:
+class SearchRemovedAndHiddenImages:
     def __init__(self, **kwargs):
         pass
