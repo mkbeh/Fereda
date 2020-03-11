@@ -73,8 +73,10 @@ class FilesPathInputData(GenericInputData, FilesOptionsCheckerMixin):
 
     @classmethod
     def _search_files_handler(cls):
+        directories = cls._cli_options['directories']
+
         for dir_path, _, files in os.walk(os.getcwd()):
-            if cls._cli_options['directories']:
+            if directories:
                 yield from cls._search_files_by_directories(dir_path, files)
             else:
                 yield from cls._search_files(dir_path, files)

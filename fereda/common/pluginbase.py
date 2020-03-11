@@ -19,7 +19,7 @@ class MultiThreadingPluginBase(metaclass=ABCMeta):
         for thread in threads_cp: thread.join()
 
         results = [worker.result for worker in workers]
-        return results
+        return filter(lambda x: x, results)
 
     def custom_map(self, worker_class, input_class, cli_options):
         workers = worker_class.create_workers(input_class, cli_options)
