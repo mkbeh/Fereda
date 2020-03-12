@@ -27,11 +27,11 @@ class GenericWorker(metaclass=ABCMeta):
 
 class TextAnalysisWorker(GenericWorker):
     def map(self):
-        file_obj = self.input_data.get_file_data()
-        re_patterns = []
-        for regex in self._cli_options.get('analysis_word'):
-            if re.search(regex, file_obj.data):
-                re_patterns.append(regex.pattern)
+        file = self.input_data.file
+        file.data = self.input_data.read()
+        analysis_regexprs = self._cli_options.get('analysis_words')
+        re_patterns = [regex.pattern for regex in analysis_regexprs if re.search(regex, file.data)]
 
         if re_patterns:
-            self.result = (file_obj.path, re_patterns)
+            file.analysis_words, file.data = re_patterns, None
+            self.result = self.input_data.file

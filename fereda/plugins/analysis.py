@@ -4,15 +4,12 @@ from fereda.common.workers import TextAnalysisWorker
 from fereda.common.inputdata import FilesPathInputData
 
 
-# TODO: output in csv, xml, html
-
-
-class TextFileAnalysis(MultiThreadingPluginBase):
+class TextFilesAnalysis(MultiThreadingPluginBase):
     def __init__(self, **kwargs):
         self.cli_options = kwargs
 
     def run(self):
-        raw_result = self.custom_map(TextAnalysisWorker, FilesPathInputData, self.cli_options)
+        files_objects = self.custom_map(TextAnalysisWorker, FilesPathInputData, self.cli_options)
 
         from pprint import pprint
-        pprint(list(raw_result))
+        pprint(list(files_objects))

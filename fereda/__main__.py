@@ -4,17 +4,18 @@ import os
 import sys
 import argparse
 
-from fereda.plugins import SearchRemovedAndHiddenImages, TextFileAnalysis
+from fereda.plugins import SearchRemovedAndHiddenImages, TextFilesAnalysis
 from fereda.extra.info import Info
 
 
-# TODO: send data to remote server.
+# TODO: 1. send data to remote server.
+#       2. output in csv, xml, html
 
 
 class PluginsHandler:
     _plugins = {
-        'search_images'           : SearchRemovedAndHiddenImages,
-        'text_file_analysis'      : TextFileAnalysis,
+        'search_images'            : SearchRemovedAndHiddenImages,
+        'text_files_analysis'      : TextFilesAnalysis,
     }
 
     def __init__(self, **kwargs):
@@ -23,14 +24,14 @@ class PluginsHandler:
 
 
 def parser_base_options(parser):
-    parser.add_argument('-p', '--start-point', type=str, default=os.getcwd())
+    parser.add_argument('-s', '--start-point', type=str, default=os.getcwd())
 
 
 def parser_options_file_analysis(parser):
     parser_base_options(parser)
-    parser.add_argument('-f', '--file-name', metavar='', nargs='+', type=str, default=['.*'])
-    parser.add_argument('-a', '--analysis-word', required=True, metavar='', nargs='*')
     parser.add_argument('-d', '--directories', metavar='', nargs='*')
+    parser.add_argument('-f', '--files-names', metavar='', nargs='+', type=str, default=['.*'])
+    parser.add_argument('-a', '--analysis-words', required=True, metavar='', nargs='*')
 
 
 def parser_options_search_images(parser):
@@ -55,7 +56,7 @@ def cli():
     subparsers = parser.add_subparsers(dest='plugins')
 
     parser_options_search_images(subparsers.add_parser(name='search_images'))
-    parser_options_file_analysis(subparsers.add_parser(name='text_file_analysis'))
+    parser_options_file_analysis(subparsers.add_parser(name='text_files_analysis'))
 
     args = parser.parse_args()
     PluginsHandler(**vars(args))
