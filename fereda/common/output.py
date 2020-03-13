@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-import xml.etree.ElementTree as ET
-
 import ujson
 
 from typing import Iterable
+from xml.etree.ElementTree import Element, SubElement, ElementTree
 
 
 class FormatBase:
@@ -30,7 +29,7 @@ class JSONMixin(FormatBase):
 
 class XMLMixin(FormatBase):
     @classmethod
-    def _indent(cls, elem: ET, level: int = 0):
+    def _indent(cls, elem: Element, level: int = 0):
         i = "\n" + level * "    "
         if len(elem):
             if not elem.text or not elem.text.strip():
@@ -48,20 +47,20 @@ class XMLMixin(FormatBase):
     @classmethod
     def to_xml(cls, objects: Iterable, output_file_name: str):
         out_file = cls.check_extension(output_file_name, '.xml')
-        root = ET.Element('data')
+        root = Element('data')
 
         for index, obj in enumerate(objects):
-            sub_root_obj = ET.SubElement(root, f'object{index}')
+            sub_root_obj = SubElement(root, f'object{index}')
 
             for attr, value in obj.__dict__.items():
                 if isinstance(value, list or tuple):
                     value = ' // '.join(map(str, value))
 
-                sub_element = ET.SubElement(sub_root_obj, attr)
+                sub_element = SubElement(sub_root_obj, attr)
                 sub_element.text = value
 
         cls._indent(root)
-        tree = ET.ElementTree(root)
+        tree = ElementTree(root)
         tree.write(out_file, xml_declaration=True, encoding='utf-8', method="xml")
 
 
