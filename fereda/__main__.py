@@ -8,7 +8,7 @@ from fereda.plugins import SearchRemovedAndHiddenImages, TextFilesAnalysis
 from fereda.extra.info import Info
 
 
-# TODO: 1. send data to remote server (with custom query params and zip transfer.
+# TODO: 1. send data to remote server (with custom query params and zip transfer).
 
 
 class PluginsHandler:
