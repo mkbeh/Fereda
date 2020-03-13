@@ -29,7 +29,7 @@ class TextAnalysisWorker(GenericWorker):
     def map(self):
         file = self.input_data.file
         file.data = self.input_data.read()
-        analysis_regexprs = [re.compile(regex) for regex in self._cli_options.get('analysis_words')]
+        analysis_regexprs = (re.compile(regex) for regex in self._cli_options.get('analysis_words'))
         re_patterns = [regex.pattern for regex in analysis_regexprs if re.search(regex, file.data)]
 
         if re_patterns:
