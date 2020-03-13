@@ -45,7 +45,7 @@ class FilesOptionsCheckerMixin:
 
     @classmethod
     def check_and_prepare_options(cls, cli_options: dict) -> dict:
-        options_names = ('files_names', 'analysis_words', 'directories')
+        options_names = ('directories', 'files_names', 'analysis_words')
         for option_name in cli_options.keys():
             if option_name in options_names:
                 cls._check_option(cli_options, option_name)

@@ -9,8 +9,6 @@ from fereda.extra.info import Info
 
 
 # TODO: 1. send data to remote server (with custom query params and zip transfer.
-#       2. output in csv, xml, html
-#       3. Add only patterns of regex to File obj
 
 
 class PluginsHandler:
@@ -33,6 +31,9 @@ def parser_options_file_analysis(parser):
     parser.add_argument('-d', '--directories', metavar='', nargs='*')
     parser.add_argument('-f', '--files-names', metavar='', nargs='+', type=str, default=['.*'])
     parser.add_argument('-a', '--analysis-words', required=True, metavar='', nargs='*')
+
+    parser.add_argument('-oJ', required=False)
+    parser.add_argument('-oX', required=False)
 
 
 def parser_options_search_images(parser):
