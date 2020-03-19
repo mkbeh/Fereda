@@ -21,3 +21,4 @@ def get_compiled_regex(regexpressions: list) -> list:
             compiled_regexprs.append(r)
 
     return compiled_regexprs
+
