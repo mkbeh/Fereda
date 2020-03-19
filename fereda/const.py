@@ -19,9 +19,6 @@ PREVIEW_IMG = '''\u001b[0m \033[1m
 
 # ---- Messages.
 PLUGINS = """List of available plugins:
-+ search_files
-+ search_removed_images
-+ search_hidden_images
-+ search_hidden_files
-+ text_file_analysis
++ search_images
++ text_files_analysis
 """

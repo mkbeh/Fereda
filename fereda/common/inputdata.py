@@ -16,9 +16,9 @@ class GenericInputData(metaclass=ABCMeta):
         pass
 
 
-@dataclass()
+@dataclass(repr=False, eq=False)
 class File:
-    directory           : str       = None
+    directory_data      : list      = None
     file_name           : str       = None
     analysis_words      : list      = None
     path                : str       = None
@@ -73,9 +73,14 @@ class FilesPathInputData(GenericInputData, FilesOptionsCheckerMixin):
         for file in files:
             file_name_regex = cls._match_file_name_regex(file)
             if file_name_regex:
+                try:
+                    directory_data = [dir_path, directory_regex.pattern]
+                except AttributeError:
+                    directory_data = [dir_path]
+
                 yield cls(
                     File(
-                        directory=directory_regex.pattern,
+                        directory_data=directory_data,
                         file_name=file_name_regex.pattern,
                         path=os.path.join(dir_path, file)
                     )

@@ -4,17 +4,19 @@ import os
 import sys
 import argparse
 
-from fereda.plugins import SearchRemovedAndHiddenImages, TextFilesAnalysis
+from fereda.plugins import SearchRemovedAndHiddenImages, TextFilesAnalysis, Dump
 from fereda.extra.info import Info
 
 
-# TODO: 1. send data to remote server (with custom query params and zip transfer).
+# TODO: 0. send result data to remote server (with custom query params and zip transfer).
+# TODO: 1: add databases analysis.
 
 
 class PluginsHandler:
     _plugins = {
         'search_images'            : SearchRemovedAndHiddenImages,
         'text_files_analysis'      : TextFilesAnalysis,
+        'dump'                     : Dump,
     }
 
     def __init__(self, **kwargs):
@@ -26,7 +28,7 @@ def parser_base_options(parser):
     parser.add_argument('-s', '--start-point', type=str, default=os.getcwd())
 
 
-def parser_options_file_analysis(parser):
+def parser_options_files_analysis(parser):
     parser_base_options(parser)
     parser.add_argument('-d', '--directories', metavar='', nargs='*')
     parser.add_argument('-f', '--files-names', metavar='', nargs='+', type=str, default=['.*'])
@@ -39,6 +41,18 @@ def parser_options_file_analysis(parser):
 def parser_options_search_images(parser):
     parser_base_options(parser)
     parser.add_argument('-m', '--applications', metavar='', nargs='*')
+
+
+def parser_options_dump(parser):
+    # TODO: also add dump for:
+    #   - browsers cookies
+    #   - browser history
+
+    parser_base_options(parser)
+    parser.add_argument('calls', metavar='calls')
+    parser.add_argument('sms/mms', metavar='sms/mms')
+    parser.add_argument('contacts', metavar='contacts')
+    parser.add_argument('coordinates', metavar='coordinates')
 
 
 def args_checker():
@@ -58,7 +72,8 @@ def cli():
     subparsers = parser.add_subparsers(dest='plugins')
 
     parser_options_search_images(subparsers.add_parser(name='search_images'))
-    parser_options_file_analysis(subparsers.add_parser(name='text_files_analysis'))
+    parser_options_files_analysis(subparsers.add_parser(name='text_files_analysis'))
+    parser_options_dump(subparsers.add_parser(name='dump'))
 
     args = parser.parse_args()
     PluginsHandler(**vars(args))
