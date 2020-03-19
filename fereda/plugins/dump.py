@@ -7,4 +7,4 @@ class Dump(MultiThreadingPluginBase):
         pass
 
     def run(self):
-        print('lol')
+        pass

@@ -28,10 +28,25 @@ class GenericWorker(metaclass=ABCMeta):
 class TextAnalysisWorker(GenericWorker):
     def map(self):
         file = self.input_data.file
-        file.data = self.input_data.read()
+        file.data = self.input_data.read_from_file()
         analysis_regexprs = (re.compile(regex) for regex in self._cli_options.get('analysis_words'))
         re_patterns = [regex.pattern for regex in analysis_regexprs if re.search(regex, file.data)]
 
         if re_patterns:
             file.analysis_words, file.data = re_patterns, None
+            self.result = self.input_data.file
+
+
+class DatabasesAnalysisWorker(GenericWorker):
+    # TODO: 0. add custom sql requests
+    # TODO: 1. add regex for select and from
+
+    def map(self):
+        db = self.input_data.file
+        db.data = self.input_data.read_from_db()
+        analysis_regexprs = (re.compile(regex) for regex in self._cli_options.get('analysis_words'))
+        re_patterns = []
+
+        if re_patterns:
+            db.analysis_words, db.data = re_patterns, None
             self.result = self.input_data.file

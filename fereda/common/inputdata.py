@@ -16,6 +16,18 @@ class GenericInputData(metaclass=ABCMeta):
         pass
 
 
+class AppsPathInputData(GenericInputData):
+    __slots__ = ('path', )
+
+    def __init__(self, path):
+        super().__init__()
+        self.path = path
+
+    @classmethod
+    def generate_inputs(cls, cli_options: dict):
+        pass
+
+
 @dataclass(repr=False, eq=False)
 class File:
     directory_data      : list      = None
@@ -108,21 +120,12 @@ class FilesPathInputData(GenericInputData, FilesOptionsCheckerMixin):
         cls._cli_options = cls.check_and_prepare_options(cli_options)
         yield from cls._search_files_handler()
 
-    def read(self):
+    def read_from_file(self):
         return open(
             self.file.path,
             encoding='utf-8',
             errors='ignore'
         ).read()
 
-
-class AppsPathInputData(GenericInputData):
-    __slots__ = ('path', )
-
-    def __init__(self, path):
-        super().__init__()
-        self.path = path
-
-    @classmethod
-    def generate_inputs(cls, cli_options: dict):
+    def read_from_db(self):
         pass
