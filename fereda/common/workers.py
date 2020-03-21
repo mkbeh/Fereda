@@ -6,6 +6,8 @@ import sqlalchemy as sq
 from abc import ABCMeta, abstractmethod
 from typing import Generator
 
+from fereda.common import File, Database
+
 
 class GenericWorker(metaclass=ABCMeta):
     cli_options = None
@@ -29,7 +31,7 @@ class GenericWorker(metaclass=ABCMeta):
 
 
 class TextAnalysisWorker(GenericWorker):
-    def _text_analysis(self, file: object, analysis_regexprs: Generator):
+    def _text_analysis(self, file: File, analysis_regexprs: Generator):
         re_patterns = [regex.pattern for regex in analysis_regexprs if re.search(regex, file.data)]
 
         if re_patterns:
@@ -52,7 +54,8 @@ class DatabasesAnalysisWorker(GenericWorker):
     def _database_analysis(self):
         pass
 
-    def _exec_raw_sql(self, db):
+    def _exec_raw_sql(self, db: Database):
+        # TODO: remove bytes fields
         engine = sq.create_engine(f'{db.name}:///{db.path}')
         with engine.connect() as conn:
             result = conn.execute(db.raw_sql)
@@ -61,7 +64,7 @@ class DatabasesAnalysisWorker(GenericWorker):
                 self.input_data.file.data = (item for item in data.fetchall())
                 return True
 
-    def _handle_raw_sql(self, db):
+    def _handle_raw_sql(self, db: Database):
         if not db.raw_sql:
             return
 
