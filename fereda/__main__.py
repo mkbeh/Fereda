@@ -4,12 +4,11 @@ import os
 import sys
 import argparse
 
-from fereda.plugins import SearchRemovedAndHiddenImages, TextFilesAnalysis, DatabasesAnalysis, Dump
+from fereda.plugins import SearchRemovedAndHiddenImages, TextFilesAnalysis, DatabasesAnalysis, Dump, DEFAULT_BROWSERS
 from fereda.extra.info import Info
 
 
 # TODO: 0. send result data to remote server (with custom query params and zip transfer(choose pack: tar, gzip, etc)).
-# TODO: 1. improve cli interface.
 # TODO: 2. add groups for regex (can starts with REGEXPATTERN:)
 
 
@@ -26,14 +25,21 @@ class PluginsHandler:
         self._plugin(**kwargs).run()
 
 
+# --- BASE OPTIONS ---
 def parser_base_options(parser):
-    parser.add_argument('-s', '--start-point', type=str, default=os.getcwd())
+    parser.add_argument('-p', '--start-point', type=str, default=os.getcwd())
 
 
+# --- SEARCH IMAGES OPTIONS ---
+def parser_options_search_images(parser):
+    parser_base_options(parser)
+    parser.add_argument('-a', '--applications', metavar='', nargs='*')
+
+
+# --- ANALYSIS OPTIONS ---
 def parser_base_options_analysis(parser):
     parser_base_options(parser)
     parser.add_argument('-d', '--directories', metavar='', nargs='*')
-    parser.add_argument('-a', '--analysis-words', required=True, metavar='', nargs='*')
 
     parser.add_argument('-oJ', required=False)
     parser.add_argument('-oX', required=False)
@@ -41,28 +47,31 @@ def parser_base_options_analysis(parser):
 
 def parser_options_files_analysis(parser):
     parser_base_options_analysis(parser)
-    parser.add_argument('-f', '--files-names', metavar='', nargs='+', type=str, default=['.*'])
+    parser.add_argument('--files-names', metavar='', nargs='+', type=str, default=['.*'])
+    parser.add_argument('--analysis-words', required=True, metavar='', nargs='*')
 
 
 def parser_options_databases_analysis(parser):
     parser_base_options_analysis(parser)
+    parser.add_argument('--db-name', metavar='', type=str, default='sqlite')
+    parser.add_argument('--raw-sql', metavar='', type=str)
+
+    parser.add_argument('--tables-names', metavar='', type=str, nargs='*')
+    parser.add_argument('--columns-names', metavar='', type=str, nargs='*')
+    parser.add_argument('--fields-names', metavar='', type=str, nargs='*')
 
 
-def parser_options_search_images(parser):
-    parser_base_options(parser)
-    parser.add_argument('-m', '--applications', metavar='', nargs='*')
-
-
+# --- DUMP OPTIONS ---
 def parser_options_dump(parser):
-    # TODO: also add dump for:
-    #   - browsers cookies
-    #   - browser history
-
     parser_base_options(parser)
     parser.add_argument('calls', metavar='calls')
     parser.add_argument('messages', metavar='messages')
     parser.add_argument('contacts', metavar='contacts')
     parser.add_argument('coordinates', metavar='coordinates')
+
+    parser.add_argument('--browser', metavar='', choices=DEFAULT_BROWSERS, default=DEFAULT_BROWSERS)
+    parser.add_argument('browser_cookies', metavar='browser_cookies')
+    parser.add_argument('browser_history', metavar='browser_history')
 
 
 def args_checker():

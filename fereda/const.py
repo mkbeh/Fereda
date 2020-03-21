@@ -21,4 +21,6 @@ PREVIEW_IMG = '''\u001b[0m \033[1m
 PLUGINS = """List of available plugins:
 + search_images
 + text_files_analysis
++ databases_analysis
++ dump
 """

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from fereda.common import File, Database
 from fereda.common.pluginbase import MultiThreadingPluginBase
 from fereda.common.workers import TextAnalysisWorker, DatabasesAnalysisWorker
 from fereda.common.inputdata import FilesPathInputData
@@ -7,6 +8,7 @@ from fereda.common.output import OutputMixin
 
 class TextFilesAnalysis(MultiThreadingPluginBase, OutputMixin):
     def __init__(self, **kwargs):
+        kwargs['file_object'] = File
         self.cli_options = kwargs
 
     def run(self):
@@ -16,7 +18,8 @@ class TextFilesAnalysis(MultiThreadingPluginBase, OutputMixin):
 
 class DatabasesAnalysis(MultiThreadingPluginBase, OutputMixin):
     def __init__(self, **kwargs):
-        kwargs.update({'files_names': ['.sqlite']})
+        kwargs['file_object'] = Database
+        kwargs['files_names'] = ['.' + kwargs['db_name']]
         self.cli_options = kwargs
 
     def run(self):

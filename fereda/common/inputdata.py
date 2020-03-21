@@ -3,7 +3,6 @@ import os
 import re
 
 from abc import ABCMeta, abstractmethod
-from dataclasses import dataclass
 from typing import Pattern, Generator
 
 from fereda.extra import utils
@@ -26,15 +25,6 @@ class AppsPathInputData(GenericInputData):
     @classmethod
     def generate_inputs(cls, cli_options: dict):
         pass
-
-
-@dataclass(repr=False, eq=False)
-class File:
-    directory_data      : list      = None
-    file_name           : str       = None
-    analysis_words      : list      = None
-    path                : str       = None
-    data                : str       = None
 
 
 class FilesOptionsCheckerMixin:
@@ -70,7 +60,7 @@ class FilesPathInputData(GenericInputData, FilesOptionsCheckerMixin):
 
     _cli_options = None
 
-    def __init__(self, file: File):
+    def __init__(self, file: object):
         super().__init__()
         self.file = file
 
@@ -81,7 +71,9 @@ class FilesPathInputData(GenericInputData, FilesOptionsCheckerMixin):
                 return file_name_regex
 
     @classmethod
-    def _search_files(cls, dir_path: str, files: list, directory_regex: Pattern = None) -> File:
+    def _search_files(cls, dir_path: str, files: list, directory_regex: Pattern = None) -> object:
+        file_object = cls._cli_options.get('file_object')
+
         for file in files:
             file_name_regex = cls._match_file_name_regex(file)
             if file_name_regex:
@@ -91,9 +83,9 @@ class FilesPathInputData(GenericInputData, FilesOptionsCheckerMixin):
                     directory_data = [dir_path]
 
                 yield cls(
-                    File(
+                    file_object(
                         directory_data=directory_data,
-                        file_name=file_name_regex.pattern,
+                        file_name_regex=file_name_regex.pattern,
                         path=os.path.join(dir_path, file)
                     )
                 )
@@ -106,7 +98,7 @@ class FilesPathInputData(GenericInputData, FilesOptionsCheckerMixin):
                 yield from cls._search_files(dir_path, files, directory_regex)
 
     @classmethod
-    def _search_files_handler(cls) -> Generator[File, None, None]:
+    def _search_files_handler(cls) -> Generator[object, None, None]:
         directories = cls._cli_options['directories']
 
         for dir_path, _, files in os.walk(os.getcwd()):
@@ -116,7 +108,7 @@ class FilesPathInputData(GenericInputData, FilesOptionsCheckerMixin):
                 yield from cls._search_files(dir_path, files)
 
     @classmethod
-    def generate_inputs(cls, cli_options: dict) ->  Generator[File, None, None]:
+    def generate_inputs(cls, cli_options: dict) ->  Generator[object, None, None]:
         cls._cli_options = cls.check_and_prepare_options(cli_options)
         yield from cls._search_files_handler()
 
@@ -126,6 +118,3 @@ class FilesPathInputData(GenericInputData, FilesOptionsCheckerMixin):
             encoding='utf-8',
             errors='ignore'
         ).read()
-
-    def read_from_db(self):
-        pass
