@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
 import re
-import sqlite3
 
 import sqlalchemy as sq
 
@@ -82,19 +81,8 @@ class DatabasesAnalysisWorker(GenericWorker):
             except sq.exc.OperationalError:
                 return
 
-            data = resultproxy.fetchall()
-            if data:
-                db.data = self._to_dict(data)
-                return True
-
-    def _handle_raw_sql(self, db: Database):
-        if not db.raw_sql:
-            return
-
-        data = self._exec_raw_sql(db)
-        if data:
-            self.result = db
-            return True
+            db.data = self._to_dict(resultproxy.fetchall())
+            return db if db.data else None
 
     def _get_prepared_database_object(self):
         database, options = self.input_data.file, self.cli_options
@@ -104,5 +92,6 @@ class DatabasesAnalysisWorker(GenericWorker):
     def map(self):
         database, options = self._get_prepared_database_object(), self.cli_options
 
-        if self._handle_raw_sql(database):
+        if database.raw_sql:
+            self.result = self._exec_raw_sql(database)
             return

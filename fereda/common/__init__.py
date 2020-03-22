@@ -53,3 +53,6 @@ class Database(BaseFile):
     table_name_regex    : str       = None
     column_name_regex   : str       = None
     field_name_regex    : str       = None
+    max_field_size      : int       = None
+    skip_blob           : bool      = False
+    max_blob_size       : int       = None
