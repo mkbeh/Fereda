@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+import sys
 import re
+import sqlite3
 
 import sqlalchemy as sq
 
@@ -49,19 +51,40 @@ class TextAnalysisWorker(GenericWorker):
 
 
 class DatabasesAnalysisWorker(GenericWorker):
-    # NOTE: exclude bytes , only strings
-
     def _database_analysis(self):
         pass
 
+    @staticmethod
+    def _handle_field_value(val, options, skip_blob):
+        if isinstance(val, str) or isinstance(val, int):
+            if sys.getsizeof(val) <= options.get('max_field_size'):
+                return val
+            else:
+                return None
+        else:
+            if skip_blob:
+                return None
+            elif not skip_blob and sys.getsizeof(val) <= options.get('max_blob_size'):
+                return val
+
+    def _to_dict(self, data):
+        options, skip_blob = self.cli_options, self.cli_options.get('skip_blob')
+        return [
+            {column: self._handle_field_value(value, options, skip_blob) for column, value in rowproxy.items()}
+            for rowproxy in data
+        ]
+
     def _exec_raw_sql(self, db: Database):
-        # TODO: remove bytes fields
         engine = sq.create_engine(f'{db.name}:///{db.path}')
         with engine.connect() as conn:
-            result = conn.execute(db.raw_sql)
+            try:
+                resultproxy = conn.execute(db.raw_sql)
+            except sq.exc.OperationalError:
+                return
 
-            if result.fetchone():
-                self.input_data.file.data = (item for item in data.fetchall())
+            data = resultproxy.fetchall()
+            if data:
+                db.data = self._to_dict(data)
                 return True
 
     def _handle_raw_sql(self, db: Database):
@@ -70,6 +93,7 @@ class DatabasesAnalysisWorker(GenericWorker):
 
         data = self._exec_raw_sql(db)
         if data:
+            self.result = db
             return True
 
     def _get_prepared_database_object(self):

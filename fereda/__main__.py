@@ -10,6 +10,7 @@ from fereda.extra.info import Info
 
 # TODO: 0. send result data to remote server (with custom query params and zip transfer(choose pack: tar, gzip, etc)).
 # TODO: 2. add groups for regex (can starts with REGEXPATTERN:)
+# TODO: 3. add errors logging (analysis db,) and options on/off logging.
 
 
 class PluginsHandler:
@@ -43,6 +44,7 @@ def parser_base_options_analysis(parser):
 
     parser.add_argument('-oJ', required=False)
     parser.add_argument('-oX', required=False)
+    parser.add_argument('-oS', required=False)      # NOTE: not tested yet.
 
 
 def parser_options_files_analysis(parser):
@@ -59,6 +61,9 @@ def parser_options_databases_analysis(parser):
     parser.add_argument('--tables-names', metavar='', type=str, nargs='*')
     parser.add_argument('--columns-names', metavar='', type=str, nargs='*')
     parser.add_argument('--fields-names', metavar='', type=str, nargs='*')
+    parser.add_argument('--max-field-size', metavar='bytes', type=int, default=200)
+    parser.add_argument('--skip-blob', action='store_true')
+    parser.add_argument('--max-blob-size', metavar='bytes', type=int, default=5 * 10 ** 6)
 
 
 # --- DUMP OPTIONS ---

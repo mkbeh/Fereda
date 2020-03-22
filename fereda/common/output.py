@@ -64,10 +64,17 @@ class XMLMixin(FormatBase):
         tree.write(out_file, xml_declaration=True, encoding='utf-8', method="xml")
 
 
-class OutputMixin(JSONMixin, XMLMixin):
+class SqliteMixin(FormatBase):
+    @classmethod
+    def to_sqlite(cls, objects: Iterable, output_file_name: str):
+        pass
+
+
+class OutputMixin(JSONMixin, XMLMixin, SqliteMixin):
     _output_options = {
         'oJ': JSONMixin.to_json,
         'oX': XMLMixin.to_xml,
+        'oS': SqliteMixin.to_sqlite,
     }
 
     def generate_output(self, cli_options: dict, objects: Iterable):
