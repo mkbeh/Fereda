@@ -63,7 +63,7 @@ class RawSqlMixin:
             elif not skip_blob and sys.getsizeof(val) <= options.get('max_blob_size'):
                 return val
 
-    def _to_dict(self, data: List[tuple], options: dict) -> List[dict]:
+    def _to_dict(self, data: List[sq.engine.result.RowProxy], options: dict) -> List[dict]:
         skip_blob = options.get('skip_blob')
         return [
             {column: self._handle_field_value(value, options, skip_blob) for column, value in rowproxy.items()}
