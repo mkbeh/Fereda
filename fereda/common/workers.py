@@ -70,7 +70,7 @@ class RawSqlMixin:
             for rowproxy in data
         ]
 
-    def _exec_raw_sql(self, db: Database):
+    def exec_raw_sql(self, db: Database):
         engine = sq.create_engine(f'{db.name}:///{db.path}')
         with engine.connect() as conn:
             try:
@@ -95,5 +95,5 @@ class DatabasesAnalysisWorker(GenericWorker, RawSqlMixin):
         database, options = self._get_prepared_database_object(), self.cli_options
 
         if database.raw_sql:
-            self.result = self._exec_raw_sql(database)
+            self.result = self.exec_raw_sql(database)
             return
