@@ -49,10 +49,7 @@ class TextAnalysisWorker(GenericWorker):
         self._text_analysis(file, analysis_regexprs)
 
 
-class DatabasesAnalysisWorker(GenericWorker):
-    def _database_analysis(self):
-        pass
-
+class RawSqlMixin:
     @staticmethod
     def _handle_field_value(val, options, skip_blob):
         if isinstance(val, str) or isinstance(val, int):
@@ -83,6 +80,11 @@ class DatabasesAnalysisWorker(GenericWorker):
 
             db.data = self._to_dict(resultproxy.fetchall())
             return db if db.data else None
+
+
+class DatabasesAnalysisWorker(GenericWorker, RawSqlMixin):
+    def _database_analysis(self):
+        pass
 
     def _get_prepared_database_object(self):
         database, options = self.input_data.file, self.cli_options
