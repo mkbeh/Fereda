@@ -11,6 +11,7 @@ from fereda.extra.info import Info
 # TODO: 0. send result data to remote server (with custom query params and zip transfer(choose pack: tar, gzip, etc)).
 # TODO: 2. add groups for regex (can starts with REGEXPATTERN:)
 # TODO: 3. add errors logging (analysis db,) and options on/off logging.
+# TODO: 4. improve typing.
 
 
 class PluginsHandler:
@@ -60,6 +61,7 @@ def parser_options_databases_analysis(parser):
 
     parser.add_argument('--tables-names', metavar='', type=str, nargs='*')
     parser.add_argument('--columns-names', metavar='', type=str, nargs='*')
+    parser.add_argument('--rows-limit', metavar='number', type=int, default=10)
     parser.add_argument('--fields-names', metavar='', type=str, nargs='*')
     parser.add_argument('--max-field-size', metavar='bytes', type=int, default=200)
     parser.add_argument('--skip-blob', action='store_true')
@@ -73,6 +75,7 @@ def parser_options_dump(parser):
     parser.add_argument('messages', metavar='messages')
     parser.add_argument('contacts', metavar='contacts')
     parser.add_argument('coordinates', metavar='coordinates')
+    parser.add_argument('accounts', metavar='')     # EXPERIMENTAL
 
     parser.add_argument('--browser', metavar='', choices=DEFAULT_BROWSERS, default=DEFAULT_BROWSERS)
     parser.add_argument('browser_cookies', metavar='browser_cookies')

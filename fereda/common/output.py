@@ -5,7 +5,7 @@ from typing import Iterable
 from xml.etree.ElementTree import Element, SubElement, ElementTree
 
 
-class FormatBase:
+class ExtensionBase:
     @staticmethod
     def check_extension(output_file_name: str, extension: str) -> str:
         if output_file_name.endswith(extension):
@@ -14,7 +14,7 @@ class FormatBase:
         return output_file_name + extension
 
 
-class JSONMixin(FormatBase):
+class JSONMixin(ExtensionBase):
     @classmethod
     def to_json(cls, objects: Iterable, output_file_name: str):
         out_file = cls.check_extension(output_file_name, '.json')
@@ -27,7 +27,7 @@ class JSONMixin(FormatBase):
             ujson.dump(data, file, indent=4)
 
 
-class XMLMixin(FormatBase):
+class XMLMixin(ExtensionBase):
     @classmethod
     def _indent(cls, elem: Element, level: int = 0):
         i = "\n" + level * "    "
@@ -64,7 +64,7 @@ class XMLMixin(FormatBase):
         tree.write(out_file, xml_declaration=True, encoding='utf-8', method="xml")
 
 
-class SqliteMixin(FormatBase):
+class SqliteMixin(ExtensionBase):
     @classmethod
     def to_sqlite(cls, objects: Iterable, output_file_name: str):
         pass

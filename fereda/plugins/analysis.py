@@ -7,6 +7,8 @@ from fereda.common.output import OutputMixin
 
 
 class TextFilesAnalysis(MultiThreadingPluginBase, OutputMixin):
+    # EXPERIMENTAL: check `python text analysis` - getting specific lines where found some text data.
+
     def __init__(self, **kwargs):
         kwargs['file_object'] = File
         self.cli_options = kwargs
@@ -24,10 +26,4 @@ class DatabasesAnalysis(MultiThreadingPluginBase, OutputMixin):
 
     def run(self):
         databases_objects = self.custom_map(DatabasesAnalysisWorker, FilesPathInputData, self.cli_options)
-
-        from pprint import pprint
-        for i in databases_objects:
-            pprint(i)
-            pprint(list(i.data))
-            print('*' * 7)
         # self.generate_output(self.cli_options, databases_objects)
