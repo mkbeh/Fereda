@@ -129,12 +129,13 @@ class DatabaseAnalysisMixin:
                     for field in row
                     if re.search(regex, field)
                 ]
-                analysis_data.append((table_name, columns.keys(), rows))
+
+                if rows:
+                    analysis_data.append((table_name, columns.keys(), rows))
             else:
                 analysis_data.append((table_name, columns.keys(), result_proxy.fetchall()))
 
-        from pprint import pprint
-        pprint(analysis_data)
+        return analysis_data
 
     def _columns_analysis(self, tables: Dict, regexpressions: List[str]):
         tables_with_columns = []
@@ -174,7 +175,11 @@ class DatabaseAnalysisMixin:
                 return
 
             tables_with_columns = self._columns_analysis(tables, columns_names_regex)
-            result = self._fields_analysis(conn, tables_with_columns, fields_names_regex, rows_limit)
+            overall_result = self._fields_analysis(conn, tables_with_columns, fields_names_regex, rows_limit)
+            if overall_result:
+                print(overall_result)
+
+            return
 
     def _is_any_require_option(self, options):
         return any(

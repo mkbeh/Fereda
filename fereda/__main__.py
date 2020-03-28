@@ -43,9 +43,9 @@ def parser_base_options_analysis(parser):
     parser_base_options(parser)
     parser.add_argument('-d', '--directories', metavar='', nargs='*')
 
-    parser.add_argument('-oJ', required=False)
-    parser.add_argument('-oX', required=False)
-    parser.add_argument('-oS', required=False)      # NOTE: not tested yet.
+    parser.add_argument('-oJ', metavar='file name', required=False)
+    parser.add_argument('-oX', metavar='file name', required=False)
+    parser.add_argument('-oS', metavar='file name', required=False)      # NOTE: not tested yet.
 
 
 def parser_options_files_analysis(parser):
