@@ -37,7 +37,7 @@ distr with kernel 5.4.0+**
 
 ## **Installation and usage screen cast**
 
-[![Fereda Screencast](https://img.youtube.com/vi/9rh5tERPF40&t/0.jpg)](https://www.youtube.com/watch?v=9rh5tERPF40&t=191s)
+[![Fereda Screencast](https://img.youtube.com/vi/9rh5tERPF40/0.jpg)](https://www.youtube.com/watch?v=9rh5tERPF40&t=191s)
 
 ## Installation
 
