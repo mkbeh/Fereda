@@ -132,6 +132,7 @@ dmypy.json
 .vscode/
 test.py
 fereda/test_images
+Sale
 !/LICENSE
 .idea/codestream.xml
 .idea/discord.xml
