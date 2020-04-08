@@ -134,9 +134,9 @@ fereda -rm
 
 ## Roadmap
 
-* [ ] Text files analysis by regex.
+* [ ] Text files analysis by regular expressions.
 * [ ] Databases analysis: including raw SQL request, 
-by tables, columns names and fields values using regex.
+by tables, columns names and fields values using  regular expressions.
 * [ ] Restore hidden and removed images from gallery and
 messengers from the file system , including SDCARD.
 * [ ] Dump data:
