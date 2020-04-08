@@ -28,8 +28,14 @@ Bitcoin: bc1qwcp93tr7t7rlwe86zpglusstaq8j50dag0q6ll
 * VK (added , but not tested yet)
 
 ```lang
-NOTE:
-The list of supported devices means that the utility has been tested on these devices, but it can work correctly on many other devices.
+NOTE #1:
+The list of supported devices means that the utility 
+has been tested on these devices, but it can work 
+correctly on many other devices.
+
+NOTE #2:
+Not all devices manage to recover deleted images, 
+since not all devices cache them.
 ```
 
 **The following actions were performed on Debian based
@@ -41,7 +47,38 @@ distr with kernel 5.4.0+**
 
 ## Installation
 
-> git clone https://github.com/mkbeh/Fereda.git && cd Fereda
+```bash
+# Bash script for downloading latest github release
+# Ex. downloadGithubLatestRelease mkbeh Fereda zip true
+
+# Download latest release from github.
+# Require jq utility.
+# Params: <user> <repo_name> <archieveType:(zip or tar)> <unpack:(true or false)>
+function downloadGithubLatestRelease() {
+        user=$1
+        repoName=$2
+        archieveType=$3
+        unpack=$4
+
+        url=$(curl "https://api.github.com/repos/$user/$repoName/releases/latest" | jq -r ".${archieveType}ball_url")
+        wget -O "$repoName" $url
+         
+        if [[ $unpack = "false" ]]; then
+                return 0
+        fi
+
+
+        if [[ $archieveType == "zip" ]]; then
+                unzip $repoName
+        else
+                tar -xzf $repoName
+        fi
+
+        rm $repoName && mv $(ls | grep $repoName) $repoName
+}
+```
+
+> downloadGithubLatestRelease mkbeh Fereda zip true && cd Fereda
 
 ### **Linux**
 
