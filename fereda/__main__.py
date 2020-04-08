@@ -71,15 +71,16 @@ def parser_options_databases_analysis(parser):
 # --- DUMP OPTIONS ---
 def parser_options_dump(parser):
     parser_base_options(parser)
-    parser.add_argument('calls', metavar='calls')
-    parser.add_argument('messages', metavar='messages')
-    parser.add_argument('contacts', metavar='contacts')
-    parser.add_argument('coordinates', metavar='coordinates')
+    parser.add_argument('calls', metavar='')
+    parser.add_argument('messages', metavar='')
+    parser.add_argument('contacts', metavar='')
+    parser.add_argument('coordinates', metavar='')
+    parser.add_argument('backups', metavar='')
     parser.add_argument('accounts', metavar='')     # EXPERIMENTAL
 
     parser.add_argument('--browser', metavar='', choices=DEFAULT_BROWSERS, default=DEFAULT_BROWSERS)
-    parser.add_argument('browser_cookies', metavar='browser_cookies')
-    parser.add_argument('browser_history', metavar='browser_history')
+    parser.add_argument('browser_cookies', metavar='')
+    parser.add_argument('browser_history', metavar='')
 
 
 def args_checker():
