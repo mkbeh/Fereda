@@ -146,5 +146,6 @@ messengers from the file system , including SDCARD.
     * [ ] Coordinates
     * [ ] Backups
     * [ ] Accounts (Experimental)
+    * [ ] Mail     (Experimental)
     * [ ] Browser cookies
     * [ ] Browser history

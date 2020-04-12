@@ -77,6 +77,7 @@ def parser_options_dump(parser):
     parser.add_argument('coordinates', metavar='')
     parser.add_argument('backups', metavar='')
     parser.add_argument('accounts', metavar='')     # EXPERIMENTAL
+    parser.add_argument('mail', metavar='')         # EXPERIMENTAL
 
     parser.add_argument('--browser', metavar='', choices=DEFAULT_BROWSERS, default=DEFAULT_BROWSERS)
     parser.add_argument('browser_cookies', metavar='')
