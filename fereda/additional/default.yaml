@@ -1,0 +1,29 @@
+
+Applications:
+  Gallery:                      # Output directory name.
+    System: "org.gallery3d"     # System name of application directory.
+    User:
+      - DCIM                    # User name of application directory.
+      - Pictures
+      - Camera
+
+  Telegram:
+    System: "telegram.org"
+    User: "Telegram"
+
+  VK:
+    System: "vk.org"
+    User: "VK"
+
+Directories:
+  # -- Example --
+  # GroupName:
+  #   - /path/1
+  #   - /path/2
+  #   - /path/3
+  # GroupName2:
+  #   - /path/4
+  #   - /path/5
+
+  DEFAULT:
+    - "."

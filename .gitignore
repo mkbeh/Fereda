@@ -141,3 +141,6 @@ Sale
 .idea/modules.xml
 .idea/sonarlint/
 .idea/vcs.xml
+mydatabase.sqlite
+images.sqlite
+result.xml
