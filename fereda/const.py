@@ -14,7 +14,7 @@ PREVIEW_IMG = '''\u001b[0m \033[1m
   |  7   |     7|  7  ||     7|  !  ||  |  |
   !__!   !_____!!__!__!!_____!!_____!!__!__!
   
-  \u001b[31m||| CREATED BY EXp0s3R3b_RTH SQUAD |> v{}\u001b[0m 
+  \u001b[31m||| CREATED BY mkbeh |> v{}\u001b[0m 
 '''.format(__version__)
 
 # ---- Messages.
